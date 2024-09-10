@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/10 13:23:11 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/10 19:12:59 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,3 @@ int	main(int argc, char **argv, char **envp)
 	free_split(mini->path);
 	return (0);
 }
-/* 
-	while (str && *str)
-	{
-		while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
-			i += 1;
-		if (str[i] == '<' || str[i] == '>' || str[i] == '|')
-			insert_control(mini->tnk_list, str, &i);
-		else 
-			insert_word(mini->tnk_list, str, &i);
-	}
-
-	free(str);
-	return (0);
-} */
