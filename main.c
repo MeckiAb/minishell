@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/10 19:12:59 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:26:14 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(str);
 		parse_line(mini, str);
 		exec_line(mini);
-		free_list(mini->tnk_list);
+		free_list(mini->tkn_list);
 		free(str);
 	}
 	free_split(mini->envp);
