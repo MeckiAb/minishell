@@ -6,11 +6,21 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/10 17:49:13 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:16:40 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_space(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n');
+}
+
+int	is_control(char c)
+{
+	return (c == '<' || c == '>' || c == '|');
+}
 
 char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
 {
@@ -30,15 +40,6 @@ char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
 		p[i++] = *s3++;
 	p[i] = '\0';
 	return (p);
-}
-
-static char	**get_full_path(char **envp)
-{
-	while (envp && *envp && ft_strncmp(*envp, "PATH=", 5))
-		envp++;
-	if (!envp || !*envp)
-		return (NULL);
-	return (ft_split(*envp + 5, ':'));
 }
 
 void	free_list(t_tkn **tkn_list)
@@ -61,28 +62,4 @@ void	free_split(char **str)
 	while (str && str[i])
 		free(str[i++]);
 	free(str);
-}
-
-char	*get_env_item(char **envp, char *item)
-{
-	while (envp && *envp && ft_strncmp(*envp, item, ft_strlen(item)))
-		envp++;
-	if (!envp || !*envp)
-		return (NULL);
-	return (ft_strdup(*envp + ft_strlen(item)));
-}
-
-t_mini	*init_shell(char **envp)
-{
-	t_mini	*mini;
-
-	mini = malloc(sizeof(t_mini));
-	if (!mini)
-		return (NULL);
-	mini->envp = envp;
-	mini->path = get_full_path(envp);
-	if (!mini->path)
-		return (NULL);
-	mini->status = 0;
-	return (mini);
 }

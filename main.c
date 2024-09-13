@@ -6,11 +6,26 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/11 13:26:14 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:34:04 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static t_mini	*init_shell(char **envp)
+{
+	t_mini	*mini;
+
+	mini = malloc(sizeof(t_mini));
+	if (!mini)
+		return (NULL);
+	mini->envp = envp;
+	mini->path = get_full_path(envp);
+	if (!mini->path)
+		return (NULL);
+	mini->status = 0;
+	return (mini);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -23,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	while (1)
 	{
-		str = readline("MeckiShell :\\>");
+		str = readline("ChiquiShell :\\>");
 		add_history(str);
 		parse_line(mini, str);
 		exec_line(mini);

@@ -6,38 +6,47 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/11 14:10:23 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:04:31 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_space(char c)
+static void	insert_token(t_mini *mini, char *str, int tkn_type)
 {
-	return (c == ' ' || c == '\t' || c == '\n');
+	t_tkn	*t;
+	t_tkn	*p;
+
+	t = malloc(sizeof(t_tkn));
+	if (!t)
+		return ;
+	t->tkn_type = tkn_type;
+	t->next = NULL;
+	t->tkn = ft_strdup(str);
+	if (!t)
+		return ;
+	if (!mini->tkn_list)
+		mini->tkn_list = t;
+	else
+	{
+		p = mini->tkn_list;
+		while (p->next)
+			p = p->next;
+		p->next = t;
+	}
 }
 
-int	is_control(char c)
+static void	insert_control(t_mini *mini, char *str, int *i)
 {
-	return (c == '<' || c == '>' || c == '|');
-}
-
-void	insert_token(t_mini *mini, char *str, int tkn_type)
-{
-	
-}
-
-void	insert_control(t_mini *mini, char *str, int *i)
-{
-	if (str[*i] == '<' && str[*i + 1] == '<' && (*i += 2))
+	if (str[*i] == '<' && str[*i + 1] == '<' && ++*i && ++*i)
 		insert_token(mini, "<<", 1);
-	else if (str[*i] == '>' && str[*i + 1] == '>' && (*i += 2))
+	else if (str[*i] == '>' && str[*i + 1] == '>' && ++*i && ++*i)
 		insert_token(mini, ">>", 1);
-	else if (str[*i] == '<' && (*i += 1))
+	else if (str[*i] == '<' && ++*i)
 		insert_token(mini, "<", 1);
-	else if (str[*i] == '>' && (*i += 1))
+	else if (str[*i] == '>' && ++*i)
 		insert_token(mini, ">", 1);
-	else if (str[*i] == '|' && (*i += 1))
+	else if (str[*i] == '|' && ++*i)
 		insert_token(mini, "|", 0);
 }
 
@@ -45,34 +54,27 @@ void	insert_word(t_mini *mini, char *str, int *i)
 {
 	int		j;
 	char	*tmp;
-	int		size;
+	int		toogle_expand;
+	int		toogle_quote;
 
-	if (!str)
-		return ;
 	j = 0;
+	toogle_expand = 1;   // ESTA MIERDA NO FUNCIONARA, PROBAR CON BOOLEANOS O ALGO ASI
+	toogle_quote = -1;
 	tmp = ft_calloc(sizeof(char), (ft_strlen(str) + 1));
-	while (!is_space(str[*i]) && !is_control(str[*i]))
+	while (str[*i] && !is_space(str[*i]) && !is_control(str[*i]) || toogle_quote)
 	{
 		if ((str[*i] == '\'' && !ft_strchr(&str[*i + 1], '\''))
-				||(str[*i] == '\"' && !ft_strchr(&str[*i + 1], '\"')))
-			quote_error();
-		else if (str[*i] == '\'')
+			|| (str[*i] == '\"' && !ft_strchr(&str[*i + 1], '\"')))
+			exit(EXIT_FAILURE);
+		else if (str[*i] == '\'' && ++*i)
 		{
-			size = ft_strchr(&str[*i + 1], '\'') - &str[*i + 1];
-			ft_memcpy(&tmp[j], &str[*i], size);
-			j += size;
-			*i = *i + size + 2;
+			toogle_expand *= -1;
+			toogle_quote *= -1;
 		}
-		else if (str[j] == '\"')
-		{
-			size = ft_strchr(&str[*i + 1], '\"') - &str[*i + 1];
-			ft_memcpy(&tmp[j], &str[*i], size);
-			j += size;
-			*i = *i + size + 2;
-			expand();
-		}
-		else if (str[*i] == '$')
-			expand(tmp, j, );
+		else if (str[j] == '\"' && ++*i)
+			toogle_quote *= -1;
+		else if (str[*i] == '$' && toogle_expand && ++*i)
+			insert_env_item(mini, str, i);
 		else
 			tmp[j++] = str[*i++];
 	}
@@ -83,7 +85,7 @@ void	insert_word(t_mini *mini, char *str, int *i)
 void	parse_line(t_mini *mini, char *str)
 {
 	int	i;
-	
+
 	i = 0;
 	while (str && str[i])
 	{
@@ -91,7 +93,7 @@ void	parse_line(t_mini *mini, char *str)
 			i += 1;
 		if (is_control(str[i]))
 			insert_control(mini, str, &i);
-		else 
+		else
 			insert_word(mini, str, &i);
 	}
 	return (0);
