@@ -6,18 +6,18 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/13 11:16:40 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/13 14:12:11 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_space(char c)
+int	is_sp(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n');
 }
 
-int	is_control(char c)
+int	is_ctrl(char c)
 {
 	return (c == '<' || c == '>' || c == '|');
 }
@@ -46,7 +46,7 @@ void	free_list(t_tkn **tkn_list)
 {
 	t_tkn	*tmp;
 
-	while (*tkn_list)
+	while (tkn_list && *tkn_list)
 	{
 		tmp = *tkn_list;
 		*tkn_list = (*tkn_list)->next;

@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/13 11:34:04 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/13 15:00:05 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,24 @@ static t_mini	*init_shell(char **envp)
 	if (!mini->path)
 		return (NULL);
 	mini->status = 0;
+	mini->tkn_list = NULL;
 	return (mini);
 }
+
+void	printea_la_lista_de_tokens(t_mini *mini)
+{
+	t_tkn	*t;
+	
+	t = mini->tkn_list;
+	if (t == NULL)
+		printf("Aqui no hay nada\n");
+	while (t)
+	{
+		printf("tkn_type : %d\ttkn : %s\n", t->tkn_type, t->tkn);
+		t = t->next;
+	}
+}
+
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -38,11 +54,13 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	while (1)
 	{
-		str = readline("ChiquiShell :\\>");
+		str = readline("MeJorShell :\\>");
 		add_history(str);
+	//	insert_token(mini, "hola", 2);
 		parse_line(mini, str);
 		exec_line(mini);
-		free_list(mini->tkn_list);
+		printea_la_lista_de_tokens(mini);
+		free_list(&mini->tkn_list);
 		free(str);
 	}
 	free_split(mini->envp);

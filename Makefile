@@ -6,7 +6,7 @@
 #    By: labderra <labderra@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 12:03:18 by labderra          #+#    #+#              #
-#    Updated: 2024/09/10 12:25:55 by labderra         ###   ########.fr        #
+#    Updated: 2024/09/13 13:51:37 by labderra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ LIBFT = libft/libft.a
 SRC = main.c \
 parse.c \
 exec.c \
-tool.c
+tools.c \
+environment.c
 
 OBJ = $(SRC:.c=.o)
 
