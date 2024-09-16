@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/13 14:45:57 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:48:01 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_tkn
 
 typedef struct s_mini
 {
+	char	**argv;
 	char	**envp;
 	char	**path;
 	t_tkn	*tkn_list;
@@ -36,17 +37,20 @@ typedef struct s_mini
 }				t_mini;
 
 char	**get_full_path(char **envp);
-int		is_sp(char c);
+/* int		is_sp(char c);
 int		is_ctrl(char c);
-
+ */
 void	free_split(char **str);
 void	free_list(t_tkn **tkn_list);
+char	*join_before_line(char *prefix, char *line);
+
 
 void	parse_line(t_mini *mini, char *str);
 void	exec_line(t_mini *mini);
 
-char	*triple_strjoin(char const *s1, char const *s2, char const *s3);
-void	insert_env_item(t_mini *mini, char *str, int *i);
+//char	*triple_strjoin(char const *s1, char const *s2, char const *s3);
+//void	insert_env_item(t_mini *mini, char *str, int *i);
 void	insert_token(t_mini *mini, char *str, int tkn_type);
+void	insert_variable_value(t_mini *mini, char **str);
 
 #endif
