@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/16 13:53:28 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:01:45 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,14 @@ char	**get_full_path(char **envp)
 
 static char	*get_env_item(char **envp, char *item)
 {
-	if (item && !*item)
+	char	*search;
+	
+	search = ft_strjoin(item, "=");
+	if (!search)
 		return (item);
-	while (envp && *envp && ft_strncmp(*envp, item, ft_strlen(item)))
+	while (envp && *envp && ft_strncmp(*envp, search, ft_strlen(search)))
 		envp++;
+	free(search);
 	if (!envp || !*envp)
 		return (ft_strdup(""));
 	return (ft_strdup(*envp + ft_strlen(item) + 1));
@@ -55,27 +59,3 @@ void	insert_variable_value(t_mini *mini, char **str)
 	}
 	*str = join_before_line(value, *str);
 }
-/* 
-void	insert_env_item(t_mini *mini, char **str)
-{
-	int		j;
-	char	*word;
-	char	*item;
-
-	if ((!**str || (**str > '0' && **str < '9')) && ++*str)
-		return ;
-	while (**str && (str[*i] < '0' || str[*i] > '9')
-		&& (ft_isalnum(str[j]) || str[j] == '_'))
-		j++;
-	aux = ft_substr(str, *i, j - *i);
-	item = get_env_item(mini->envp, aux);
-	free(aux);
-	str[*i -1] = '\0';
-	if (item)
-		aux = triple_strjoin(str, item, &str[j]);
-	else
-		aux = triple_strjoin(str, "", &str[j]);
-	free(str);
-	str = aux;
-}
- */

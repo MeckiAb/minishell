@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/16 13:42:31 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:03:14 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static void	insert_word(t_mini *mini, char **str)
 			tmp[j++] = *(*str)++;
 	}
 	if (!quote)
-		insert_token(mini, tmp, 2);
+		insert_token(mini, tmp, 2);    // ft_strrchr para encontrar la ultima comilla abierta y pisarla con un \0
 	free(tmp);
 }
 
