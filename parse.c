@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/13 15:20:59 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:34:44 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	insert_token(t_mini *mini, char *str, int tkn_type)
 	}
 }
 
-static void	insert_control(t_mini *mini, char *str, int *i)
+/* static void	insert_control(t_mini *mini, char *str, int *i)
 {
 	if (str[*i] == '<' && str[*i + 1] == '<' && ++*i && ++*i)
 		insert_token(mini, "<<", 1);
@@ -48,8 +48,8 @@ static void	insert_control(t_mini *mini, char *str, int *i)
 		insert_token(mini, ">", 1);
 	else if (str[*i] == '|' && ++*i)
 		insert_token(mini, "|", 0);
-}
-
+} */
+/* 
 void	insert_word(t_mini *mini, char *str, int *i)
 {
 	int		j;
@@ -82,8 +82,8 @@ void	insert_word(t_mini *mini, char *str, int *i)
 	}
 	insert_token(mini, tmp, 2);
 	free(tmp);
-}
-
+} */
+/* 
 void	parse_line(t_mini *mini, char *str)
 {
 	int	i;
@@ -98,4 +98,105 @@ void	parse_line(t_mini *mini, char *str)
 		else
 			insert_word(mini, str, &i);
 	}
+} */
+
+static void	insert_control(t_mini *mini, char **str)
+{
+	if (**str == '<' && *(*str + 1) == '<' && *str++ && ++*str)
+		insert_token(mini, "<<", 1);
+	else if (**str == '<' && *(*str + 1) == '<' && *str++ && ++*str)
+		insert_token(mini, ">>", 1);
+	else if (**str == '<' && ++*str)
+		insert_token(mini, "<", 1);
+	else if (**str == '>' && ++*str)
+		insert_token(mini, ">", 1);
+	else if (**str == '|' && ++*str)
+		insert_token(mini, "|", 0);
 }
+
+static int	select_expand_case(int quote, char c)
+{
+	if (quote == 0 && c == '\"')
+		return (1);
+	else if (quote == 0 && c == '\'')
+		return (-1);
+	else if (quote == 1 && c == '\"')
+		return (0);
+	else if (quote == 1 && c == '\'')
+		return (1);
+	else if (quote == -1 && c == '\"')
+		return (-1);
+	else if (quote == -1 && c == '\'')
+		return (0);
+	return (0);
+}
+
+static void	insert_word(t_mini *mini, char **str)
+{
+	int		j;
+	char	*tmp;
+	int		quote;
+
+	j = 0;
+	quote = 0;
+	tmp = ft_calloc(sizeof(char), 1024);
+	while (**str && (quote || !(**str == ' ' || **str == '\t' || **str == '\n'
+		|| **str == '<' || **str == '>' || **str == '|')))
+	{
+		if (**str == '\'' || **str == '\"')
+			quote = select_quote(quote, *(*str)++);
+		else if (**str == '$' && quote >= 0 && ++*str)
+			insert_env_item(mini, str, i);
+		else
+			tmp[j++] = *(*str)++;
+	}
+	insert_token(mini, tmp, 2);
+	free(tmp);
+}
+
+void	parse_line(t_mini *mini, char *str)
+{
+	while (str && *str)
+	{
+		while (*str == ' ' || *str == '\t' || *str == '\n')
+			str++;
+		if (!*str)
+			break ;
+		else if (*str == '<' || *str == '>' || *str == '|')
+			insert_control(mini, &str);
+		else
+			insert_word(mini, &str);
+	}
+}
+
+
+/* 
+void	parse_line(t_mini *mini, char *str)
+{
+	int		quote;
+	char	*chunk;
+	char	*tmp;
+	
+	quote = 0;
+	chunk = ft_calloc(sizeof(char), 1024);
+	tmp = chunk;
+	while (str && *str)
+	{
+		if (!quote && (*str == ' ' || *str == '\t' || *str == '\n'))
+			str = str++;
+		else if (quote == 0 && ((*str == '<' && *(str + 1) == '<')
+			|| (*str == '>' && *(str + 1) == '>')) && str++)
+			insert_token(mini, *str++, 2);
+		else if (quote == 0 && (*str == '<' || *str == '>'))
+			insert_token(mini, *str++, 1);
+		else if (quote == 0 && *str == '|')
+			insert_token(mini, *str++, 0);
+		else if (*str == '\'' || *str == '\"')
+			toogle_quote(*str++, &quote);
+		else if (quote >= 0 && *str == '$' && str++)
+			str = join_line(insert_env_item(mini, str), str);
+		else
+			while (*str && !quote || (*str == ' ' || *str == '\t' || *str == '\n' ))
+			
+	}
+} */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/13 14:12:11 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:54:45 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,27 @@ int	is_sp(char c)
 int	is_ctrl(char c)
 {
 	return (c == '<' || c == '>' || c == '|');
+}
+
+char	*join_before_line(char *prefix, char *line)
+{
+	char	*temp;
+	int		i;
+	int		j;
+
+	temp = malloc(sizeof(char) * (ft_strlen(prefix) + ft_strlen(line) + 1));
+	if (!temp)
+		return (NULL);
+	i = 0;
+	while (prefix[i])
+		temp[i++] = prefix[i++];
+	j = 0;
+	while (line[j])
+		temp[i++] = line[j++];
+	temp[i] = '\0';
+	free(line);
+	free(prefix);
+	return (temp);
 }
 
 char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
