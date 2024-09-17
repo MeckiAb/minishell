@@ -6,12 +6,12 @@
 #    By: labderra <labderra@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 12:03:18 by labderra          #+#    #+#              #
-#    Updated: 2024/09/13 13:51:37 by labderra         ###   ########.fr        #
+#    Updated: 2024/09/17 14:27:17 by labderra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-CC = clang -Wall -Werror -Wextra -g -fsanitize=address
+CC = clang -Wall -Werror -Wextra -g #-fsanitize=address
 LIBFT = libft/libft.a
 SRC = main.c \
 parse.c \
@@ -43,4 +43,7 @@ fclean : clean
 
 re : fclean all
 
-.PHONY : all clean fclean re
+test : all clean
+	./minishell
+
+.PHONY : all clean fclean re test

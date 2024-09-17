@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/16 13:43:33 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/17 12:09:25 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,22 @@ static t_mini	*init_shell(char **argv, char **envp)
 	return (mini);
 }
 
+void handle_sigint(int sig)
+{
+	(void)sig;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+void handle_sigquit(int sig)
+{
+	(void)sig;
+	printf("Quit (core dumped)\n");
+	exit(131);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*str;
@@ -38,16 +54,24 @@ int	main(int argc, char **argv, char **envp)
 	mini = init_shell(argv, envp);
 	if (argc != 1 || !mini)
 		return (1);
+	signal(SIGINT, handle_sigint);
+	//signal(SIGQUIT, handle_sigquit);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		str = readline("MeJorShell :\\>");
+		str = readline("PorongaShell :\\>");
+		if (!str)
+		{
+			printf("%s", "exit\n");
+			break ;
+		}
 		add_history(str);
 		parse_line(mini, str);
 		exec_line(mini);
-		free_list(&mini->tkn_list);
+		free_list(&(mini->tkn_list));
 		free(str);
 	}
-	free_split(mini->envp);
 	free_split(mini->path);
+	free(mini);
 	return (0);
 }

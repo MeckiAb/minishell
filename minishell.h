@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/16 12:48:01 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:31:06 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -52,5 +53,8 @@ void	exec_line(t_mini *mini);
 //void	insert_env_item(t_mini *mini, char *str, int *i);
 void	insert_token(t_mini *mini, char *str, int tkn_type);
 void	insert_variable_value(t_mini *mini, char **str);
+
+void	del_empty_tokens(t_tkn **tkn_list);
+
 
 #endif

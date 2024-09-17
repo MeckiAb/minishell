@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/16 20:01:45 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:05:16 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	insert_variable_value(t_mini *mini, char **str)
 	char	*value;
 	int		j;
 
-	if (**str != '_' && !ft_isalnum(**str))
+	if (!**str || (**str != '_' && !ft_isalnum(**str)))
 		value = ft_strdup("'$'");
 	else if (**str == '0' && ++*str)
 		value = ft_strdup(mini->argv[0]);

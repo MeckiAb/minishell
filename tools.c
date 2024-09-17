@@ -6,22 +6,12 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/16 13:47:59 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:49:06 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* int	is_sp(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\n');
-}
-
-int	is_ctrl(char c)
-{
-	return (c == '<' || c == '>' || c == '|');
-}
- */
 char	*join_before_line(char *prefix, char *line)
 {
 	char	*temp;
@@ -38,31 +28,10 @@ char	*join_before_line(char *prefix, char *line)
 	while (line[j])
 		temp[i++] = line[j++];
 	temp[i] = '\0';
-//	free(line);
 	free(prefix);
 	return (temp);
 }
-/* 
-char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
-{
-	size_t	i;
-	char	*p;
 
-	i = 0;
-	p = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)
-				+ ft_strlen(s3) + 1));
-	if (!p)
-		return (NULL);
-	while (*s1)
-		p[i++] = *s1++;
-	while (*s2)
-		p[i++] = *s2++;
-	while (*s3)
-		p[i++] = *s3++;
-	p[i] = '\0';
-	return (p);
-}
- */
 void	free_list(t_tkn **tkn_list)
 {
 	t_tkn	*tmp;
@@ -71,8 +40,10 @@ void	free_list(t_tkn **tkn_list)
 	{
 		tmp = *tkn_list;
 		*tkn_list = (*tkn_list)->next;
+		free(tmp->tkn);
 		free(tmp);
 	}
+	*tkn_list = NULL;
 }
 
 void	free_split(char **str)
@@ -83,4 +54,31 @@ void	free_split(char **str)
 	while (str && str[i])
 		free(str[i++]);
 	free(str);
+}
+
+void	del_empty_tokens(t_tkn **tkn_list)
+{
+	t_tkn	*p;
+	t_tkn	*t;
+
+	while (*tkn_list && *(*tkn_list)->tkn == '\0')
+	{
+		t = *tkn_list;
+		*tkn_list = (*tkn_list)->next;
+		free(t->tkn);
+		free(t);
+	}
+	p = *tkn_list;
+	while (p)
+	{
+		if (p->next && *p->next->tkn == '\0')
+		{
+			t = p->next;
+			p->next =p->next->next;
+			free(t->tkn);
+			free(t);
+		}
+		else
+			p = p->next;
+	}
 }
