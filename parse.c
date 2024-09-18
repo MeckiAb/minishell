@@ -6,13 +6,13 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/17 13:47:19 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/18 11:48:22 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	insert_token(t_mini *mini, char *str, int tkn_type)
+static void	insert_token(t_mini *mini, char *str, int tkn_type)
 {
 	t_tkn	*t;
 	t_tkn	*p;
@@ -93,6 +93,8 @@ static void	insert_word(t_mini *mini, char **str)
 
 void	parse_line(t_mini *mini, char *str)
 {
+	char	*tkn;
+	
 	while (str && *str)
 	{
 		while (*str == ' ' || *str == '\t' || *str == '\n')
@@ -104,5 +106,10 @@ void	parse_line(t_mini *mini, char *str)
 		else
 			insert_word(mini, &str);
 	}
-	del_empty_tokens(&(mini->tkn_list));
+	tkn = check_syntax(mini);
+	if (tkn)
+	{
+		printf("syntax error near unexpected token `%s'\n", tkn);
+		free_list(&(mini->tkn_list));
+	}
 }
