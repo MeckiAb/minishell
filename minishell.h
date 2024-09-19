@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/18 11:48:37 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:01:03 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 # include <stdio.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <signal.h>
@@ -30,23 +31,23 @@ typedef struct s_tkn
 
 typedef struct s_mini
 {
-	char	**argv;
-	char	**envp;
-	char	**path;
-	int		status;
-	t_tkn	*tkn_list;
+	char		**argv;
+	char		**envp;
+	char		**path;
+	int			status;
+	t_tkn		*tkn_list;
+	t_command	*cmd_list;
 }				t_mini;
 
-typedef struct s_command_list
+typedef struct s_command
 {
-	char					*command;     // la primera palabra que me encuentre
-	char 					**arguments;   // la segunda y siguiente palabras
-	char					*environment;
-	int						command_infile;    // 0 o el fd de la ultima redirección de entrada
-	int						command_outfile;    // 1 o el fd de última redirección de salida
-	int						exit_status;
-	struct s_command_list	*next;
-}							t_command_list;
+	char				*path;     // el path correcto del comando
+	char 				**arg_array;   // la segunda y siguiente palabras
+	int					infile;    // 0 o el fd de la ultima redirección de entrada
+	int					outfile;    // 1 o el fd de última redirección de salida
+	int					exit_status;
+	struct s_command	*next;
+}						t_command;
 
 
 
@@ -56,7 +57,8 @@ void	free_split(char **str);
 void	free_list(t_tkn **tkn_list);
 char	*join_before_line(char *prefix, char *line);
 
-void	parse_line(t_mini *mini, char *str);
+void	lexer(t_mini *mini, char *str);
+void	parser(t_mini *mini);
 void	exec_line(t_mini *mini);
 
 void	insert_variable_value(t_mini *mini, char **str);

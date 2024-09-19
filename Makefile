@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: labderra <labderra@student.42.fr>          +#+  +:+       +#+         #
+#    By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 12:03:18 by labderra          #+#    #+#              #
-#    Updated: 2024/09/17 14:27:17 by labderra         ###   ########.fr        #
+#    Updated: 2024/09/19 10:27:01 by labderra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME = minishell
 CC = clang -Wall -Werror -Wextra -g #-fsanitize=address
 LIBFT = libft/libft.a
 SRC = main.c \
-parse.c \
+lexer.c
+parser.c \
 exec.c \
 tools.c \
 environment.c

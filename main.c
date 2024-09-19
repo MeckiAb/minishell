@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/17 12:09:25 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/19 10:43:59 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static t_mini	*init_shell(char **argv, char **envp)
 		return (NULL);
 	mini->status = 0;
 	mini->tkn_list = NULL;
+	mini->cmd_list = NULL;
 	return (mini);
 }
 
@@ -66,7 +67,8 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		add_history(str);
-		parse_line(mini, str);
+		lexer(mini, str);
+		parser(mini);
 		exec_line(mini);
 		free_list(&(mini->tkn_list));
 		free(str);
