@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/18 11:47:01 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:59:45 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,34 @@ void	free_split(char **str)
 	while (str && str[i])
 		free(str[i++]);
 	free(str);
+}
+
+static void	*ft_realloc(void *p, int old_size, int new_size)
+{
+	void	*r;
+	
+	if (!new_size)
+		return (free(p), NULL);
+	r = ft_calloc(1, new_size);
+	if (p && old_size <= new_size)
+		ft_memmove(r, p, old_size);
+	else if (p && old_size > new_size)
+		ft_memmove(r, p, new_size);
+	return (free (p), r);	
+}
+
+char	**add_str_to_array(char *str, char **list)
+{
+	int		size;
+	char	**r;
+	
+	size = 0;
+	while (list && list[size])
+		size++;
+	size += 1;
+	r = ft_realloc(list, sizeof(char *) * size, sizeof(char *) * (size + 1));
+	r[size] = ft_strdup(str);
+	return (r);
 }
 
 char	*check_syntax(t_mini *mini)

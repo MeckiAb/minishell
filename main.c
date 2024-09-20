@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/19 10:43:59 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:23:58 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ static t_mini	*init_shell(char **argv, char **envp)
 	if (!mini)
 		return (NULL);
 	mini->argv = argv;
-	mini->envp = envp;
-	mini->path = get_full_path(envp);
+	mini->envp = copy_environmet(envp);
+	mini->path = get_full_path(mini->envp);
 	if (!mini->path)
 		return (NULL);
 	mini->status = 0;
@@ -74,6 +74,7 @@ int	main(int argc, char **argv, char **envp)
 		free(str);
 	}
 	free_split(mini->path);
+	free_split(mini->envp);
 	free(mini);
 	return (0);
 }

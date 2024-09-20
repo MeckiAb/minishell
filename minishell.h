@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/19 12:01:03 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:20:41 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,8 @@ void	exec_line(t_mini *mini);
 
 void	insert_variable_value(t_mini *mini, char **str);
 char	*check_syntax(t_mini *mini);
+char	**add_str_to_array(char *str, char **list);
+char	**copy_environmet(char **envp);
+
 
 #endif

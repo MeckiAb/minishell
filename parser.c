@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:28:37 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/19 12:09:15 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:13:10 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,23 @@ static void	handle_redir(char *redir, char *filename, t_command *cmd)
 
 static void	handle_name(char *name, t_command *cmd)
 {
-	if (cmd->arg_array[0] == NULL)
-		find_cmd_path(name);
-	
+	cmd->arg_array =  add_str_to_array(name, cmd->arg_array);
 }
 
 static void	insert_command(t_mini *mini, t_command *cmd)
-{}
+{
+	t_command	*p;
+
+	if (!mini->cmd_list)
+		mini->cmd_list = cmd;
+	else
+	{
+		p = mini->cmd_list;
+		while (p->next)
+			p = p->next;
+		p->next = cmd;
+	}	
+}
 
 void	parser(t_mini *mini)
 {

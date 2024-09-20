@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/17 14:05:16 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:30:02 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ char	**get_full_path(char **envp)
 	while (envp && *envp && ft_strncmp(*envp, "PATH=", 5))
 		envp++;
 	if (!envp || !*envp)
-		return (NULL);
+		return (ft_split("/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:\
+			/sbin:/bin", ':'));
 	return (ft_split(*envp + 5, ':'));
 }
 
@@ -34,6 +35,16 @@ static char	*get_env_item(char **envp, char *item)
 	if (!envp || !*envp)
 		return (ft_strdup(""));
 	return (ft_strdup(*envp + ft_strlen(item) + 1));
+}
+
+char	**copy_environmet(char **envp)
+{
+	char	**p;
+
+	p = NULL;
+	while (envp && *envp)
+		add_str_to_array(*envp, p);
+	return (p);
 }
 
 void	insert_variable_value(t_mini *mini, char **str)
