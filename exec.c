@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/23 12:37:46 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/23 19:37:38 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	printea_la_lista_de_tokens(t_mini *mini)
 		t = t->next;
 	}
 }
-
+/* 
 static void	printea_la_lista_de_commands(t_mini *mini)
 {
 	t_command	*t;
@@ -45,11 +45,23 @@ static void	printea_la_lista_de_commands(t_mini *mini)
 		t = t->next;
 	}
 }
-
+ */
 
 void	exec_line(t_mini *mini)
 {
 	printea_la_lista_de_tokens(mini);
-	printea_la_lista_de_commands(mini);
-	return ;
+//	printea_la_lista_de_commands(mini);
+
+	int	fd[2];
+
+	while (mini->cmd_list)
+	{
+		run_command(mini->cmd);
+	}
+
+	if (pipe(fd) == -1)
+		perror ("piperror");
 }
+
+
+< hola.txt cat | ls >salida.txt | wc > paquito.txt

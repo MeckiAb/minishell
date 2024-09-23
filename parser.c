@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:28:37 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/23 13:17:29 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/23 17:50:40 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,39 +30,54 @@ static t_command	*new_command(void)
 	return (cmd);
 }
 
-static void heredoc(void)
+static int heredoc(char *lmt)
 {
-	
+	char	*aux_str;
+	int		tmp_file_fd;
+	int		size;
+
+	size = ft_strlen(lmt);
+	tmp_file_fd = open(".heredoctmp", O_CREAT | O_RDWR, 0644);
+	if (tmp_file_fd == -1)
+		return (-1);
+	printf("heredoc>");
+	aux_str = get_next_line(0);
+	while (aux_str)
+	{
+		if (!ft_strnstr(aux_str, lmt, size) && aux_str[size] == '\n')
+		{
+			free(aux_str);
+			break ;
+		}
+		write(tmp_file_fd, aux_str, ft_strlen(aux_str));
+		free(aux_str);
+		printf("heredoc>");
+		aux_str = get_next_line(0);
+	}
+	return (tmp_file_fd);
 }
 
-static void	handle_redir(char *redir, char *filename, t_command *cmd)
+static void	handle_redir(char *redir, char *filename)
 {
+	int	file_fd;
+	
 	if (!ft_strncmp(redir, "<<", ft_strlen(redir)))
-		heredoc();
+		file_fd = heredoc(filename);
 	else if (!ft_strncmp(redir, "<", ft_strlen(redir)))
-	{
-		cmd->infile = open(filename, O_RDONLY);
-		if (cmd->infile == -1)
-			perror(filename);
-		dup2(cmd->infile, STDIN_FILENO);
-		close(cmd->infile);
-	}
+		file_fd = open(filename, O_RDONLY);
 	else if (!ft_strncmp(redir, ">>", ft_strlen(redir)))
-	{
-		cmd->outfile = open(filename, O_WRONLY | O_APPEND | O_CREAT, 0664);
-		if (cmd->outfile == -1)
-			perror(filename);
-		dup2(cmd->outfile, STDOUT_FILENO);
-		close(cmd->outfile);
-	}
-	else if (!ft_strncmp(redir, ">", ft_strlen(redir)))
-	{
-		cmd->outfile = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 0664);
-		if (cmd->outfile == -1)
-			perror(filename);
-		dup2(cmd->outfile, STDOUT_FILENO);
-		close(cmd->outfile);
-	}
+		file_fd = open(filename, O_WRONLY | O_APPEND | O_CREAT, 0664);
+	else
+		file_fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 0664);
+	if (file_fd == -1)
+		perror("file error");
+	if (*redir == '<')
+		dup2(file_fd, STDIN_FILENO);
+	else
+		dup2(file_fd, STDOUT_FILENO);
+	close(file_fd);
+	if (!ft_strncmp(redir, "<<", ft_strlen(redir)))
+		unlink(".heredoctmp");
 }
 
 static void	handle_name(char *name, t_command *cmd)
@@ -98,7 +113,7 @@ void	parser(t_mini *mini)
 		{
 			if (p->tkn_type == 1)
 			{
-				handle_redir(p->tkn, p->next->tkn, cmd);
+				handle_redir(p->tkn, p->next->tkn);
 				p = p->next;
 			}
 			else if (p->tkn_type == 2)
