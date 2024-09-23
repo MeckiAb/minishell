@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/20 13:30:02 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/23 11:43:51 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,12 @@ static char	*get_env_item(char **envp, char *item)
 char	**copy_environmet(char **envp)
 {
 	char	**p;
+	int		i;
 
-	p = NULL;
-	while (envp && *envp)
-		add_str_to_array(*envp, p);
+	i = 0;
+	p = ft_calloc(sizeof(char *), 1);
+	while (envp && envp[i])
+		p = add_str_to_array(envp[i++], p);		
 	return (p);
 }
 

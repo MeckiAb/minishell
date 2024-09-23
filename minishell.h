@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/20 13:20:41 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:25:54 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,16 @@ typedef struct s_tkn
 	struct s_tkn	*next;
 }				t_tkn;
 
+typedef struct s_command
+{
+	char				*path;
+	char 				**arg_array;
+	int					infile;
+	int					outfile;
+	int					exit_status;
+	struct s_command	*next;
+}						t_command;
+
 typedef struct s_mini
 {
 	char		**argv;
@@ -39,22 +49,13 @@ typedef struct s_mini
 	t_command	*cmd_list;
 }				t_mini;
 
-typedef struct s_command
-{
-	char				*path;     // el path correcto del comando
-	char 				**arg_array;   // la segunda y siguiente palabras
-	int					infile;    // 0 o el fd de la ultima redirección de entrada
-	int					outfile;    // 1 o el fd de última redirección de salida
-	int					exit_status;
-	struct s_command	*next;
-}						t_command;
-
 
 
 char	**get_full_path(char **envp);
 
 void	free_split(char **str);
 void	free_list(t_tkn **tkn_list);
+void	free_commands_and_tokens(t_mini *mini);
 char	*join_before_line(char *prefix, char *line);
 
 void	lexer(t_mini *mini, char *str);

@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/20 12:59:45 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:45:40 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,28 @@ void	free_split(char **str)
 	free(str);
 }
 
+void	free_commands_and_tokens(t_mini *mini)
+{
+	t_tkn		*tkn;
+	t_command	*cmd;
+
+	while (mini->tkn_list)
+	{
+		tkn = mini->tkn_list;
+		mini->tkn_list = mini->tkn_list->next;
+		free(tkn->tkn);
+		free(tkn);
+	}
+	while (mini->cmd_list)
+	{
+		cmd = mini->cmd_list;
+		mini->cmd_list = mini->cmd_list->next;
+		free(cmd->path);
+		free_split(cmd->arg_array);
+		free(cmd);
+	}
+}
+
 static void	*ft_realloc(void *p, int old_size, int new_size)
 {
 	void	*r;
@@ -80,7 +102,7 @@ char	**add_str_to_array(char *str, char **list)
 		size++;
 	size += 1;
 	r = ft_realloc(list, sizeof(char *) * size, sizeof(char *) * (size + 1));
-	r[size] = ft_strdup(str);
+	r[size - 1] = ft_strdup(str);
 	return (r);
 }
 
