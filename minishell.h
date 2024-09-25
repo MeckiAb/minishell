@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/23 19:47:20 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/25 13:57:50 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_command
 	int					infile;
 	int					outfile;
 	int					exit_status;
+	int					pid;
 	struct s_command	*next;
 }						t_command;
 

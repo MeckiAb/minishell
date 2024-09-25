@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/23 19:37:38 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/25 14:03:54 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,38 @@ void	exec_line(t_mini *mini)
 	printea_la_lista_de_tokens(mini);
 //	printea_la_lista_de_commands(mini);
 
-	int	fd[2];
+	int			fd[2];
+	int			pipe_in;
+	int			pid;
+	t_command	*cmd;
 
-	while (mini->cmd_list)
+	cmd = mini->cmd_list;
+	pipe_in = STDIN_FILENO;
+	fd[0] = STDIN_FILENO;
+	fd[1] = STDOUT_FILENO;
+	while (cmd)
 	{
-		run_command(mini->cmd);
+		if (cmd->next && pipe(fd) == -1)
+			perror("pipe");
+		pid = fork();
+		if (!pid)
+		{
+			dup2(pipe_in, STDIN_FILENO);
+			dup2(fd[1], STDOUT_FILENO);
+
+			dup2(redirecciones);
+			close(lo que no se use);
+			run_command();
+		}
+		pipe_in = fd[0];
+		fd[1] = STDOUT_FILENO;
+		cmd->pid = pid;
+		cmd = cmd->next;
 	}
-
-	if (pipe(fd) == -1)
-		perror ("piperror");
+	cmd = mini->cmd_list;
+	while (cmd)
+	{
+		waitpid(cmd->pid, &(cmd->exit_status), 0);
+		cmd = cmd->next;
+	}
 }
-
-
-< hola.txt cat | ls >salida.txt | wc > paquito.txt

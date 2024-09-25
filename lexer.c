@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/19 10:25:29 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/25 11:31:32 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ static void	insert_word(t_mini *mini, char **str)
 	{
 		if ((**str == '\'' && quote <= 0) || (**str == '\"' && quote >= 0))
 			quote = select_quote(quote, *(*str)++);
-		else if (**str == '$' && quote >= 0 && ++*str)
+		else if (**str == '$' && quote >= 0
+			&& (ft_isalnum(*(*str + 1)) || *(*str + 1) == '_') && ++*str)
 			insert_variable_value(mini, str);
 		else
 			tmp[j++] = *(*str)++;
