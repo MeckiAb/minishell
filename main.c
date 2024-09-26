@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/23 12:42:46 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/26 21:00:45 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		str = readline("PorongaShell :\\>");
+		str = readline("MininiShell :\\>");
 		if (!str)
 		{
 			printf("%s", "exit\n");
@@ -71,10 +71,13 @@ int	main(int argc, char **argv, char **envp)
 		parser(mini);
 		exec_line(mini);
 		free_commands_and_tokens(mini);
+		
+		dprintf(2, "%d\n", fileno(stdout));
+
 		free(str);
 	}
 	free_split(mini->path);
 	free_split(mini->envp);
 	free(mini);
-	return (0);
+	return (70);
 }

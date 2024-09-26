@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:28:37 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/23 17:50:40 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/26 19:48:14 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ static t_command	*new_command(void)
 	if (!cmd->arg_array)
 		exit(EXIT_FAILURE);
 	cmd->path = NULL;
-	cmd->infile = 0;
-	cmd->outfile = 1;
+	cmd->infile = -1;
+	cmd->outfile = -1;
 	cmd->exit_status = -1;
 	cmd->next = NULL;
 	return (cmd);

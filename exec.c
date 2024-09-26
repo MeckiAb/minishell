@@ -6,52 +6,84 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/25 14:03:54 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:47:23 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	printea_la_lista_de_tokens(t_mini *mini)
+char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
 {
-	t_tkn	*t;
-	
-	t = mini->tkn_list;
-	if (t == NULL)
-		printf("Aqui no hay nada\n");
-	while (t)
-	{
-		printf("tkn_type : %d\ttkn : %s\n", t->tkn_type, t->tkn);
-		t = t->next;
-	}
+	size_t	i;
+	char	*p;
+
+	i = 0;
+	p = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)
+				+ ft_strlen(s3) + 1));
+	if (!p)
+		return (NULL);
+	while (*s1)
+		p[i++] = *s1++;
+	while (*s2)
+		p[i++] = *s2++;
+	while (*s3)
+		p[i++] = *s3++;
+	p[i] = '\0';
+	return (p);
 }
+
 /* 
-static void	printea_la_lista_de_commands(t_mini *mini)
+void	run_command(t_mini *mini, t_command *cmd)
 {
-	t_command	*t;
-	int			i;
+	char *s;
 	
-	t = mini->cmd_list;
-	if (t == NULL)
-		printf("\nFin de la Lista\n\n");
-	while (t != NULL)
-	{
-		i = 0;
-		printf("\n");
-		while (t->arg_array[i])
-			printf("%s ", t->arg_array[i++]);
-		printf("\nInfile : %d\nOutfile : %d\n", t->infile, t->outfile);
-		printf("next : %p\n", t->next);
-		t = t->next;
-	}
+	s = ft_strdup(cmd->arg_array[0]);
+	if (!ft_strncmp(s, "echo", ft_strlen(s)))
+		run_echo(cmd);
+	else if (!ft_strncmp(s, "cd", ft_strlen(s)))
+		run_cd(cmd);
+	else if (!ft_strncmp(s, "pwd", ft_strlen(s)))
+		run_pwd();
+	else if (!ft_strncmp(s, "export", ft_strlen(s)))
+		run_export(cmd);
+	else if (!ft_strncmp(s, "unset", ft_strlen(s)))
+		run_unset(cmd);
+	else if (!ft_strncmp(s, "env", ft_strlen(s)))
+		run_env(cmd);
+	else if (!ft_strncmp(s, "exit", ft_strlen(s)))
+		run_exit(cmd);
+	else
+		run_command(cmd, mini);
 }
  */
 
+void	run_execve_command(t_mini *mini, t_command *cmd)
+{
+	char	**aux;
+	char	*path_cmd;
+	int		i;
+	
+	i = 0;
+	aux = mini->path;
+	path_cmd = triple_strjoin(".", "/", cmd->arg_array[0]);
+	if(path_cmd && access(path_cmd, X_OK) == 0)
+		execve(path_cmd, cmd->arg_array, mini->envp);
+	free(path_cmd);
+	while(aux[i])
+	{
+		path_cmd = triple_strjoin(aux[i], "/", cmd->arg_array[0]);
+		if(path_cmd && access(path_cmd, X_OK) == 0)
+			execve(path_cmd, cmd->arg_array, mini->envp);
+		i++;
+		free(path_cmd);
+	}
+	if (cmd->arg_array && cmd->arg_array[0])
+		perror("Command not found");
+}
+
+
 void	exec_line(t_mini *mini)
 {
-	printea_la_lista_de_tokens(mini);
-//	printea_la_lista_de_commands(mini);
-
 	int			fd[2];
 	int			pipe_in;
 	int			pid;
@@ -68,18 +100,37 @@ void	exec_line(t_mini *mini)
 		pid = fork();
 		if (!pid)
 		{
+			close(fd[0]);
 			dup2(pipe_in, STDIN_FILENO);
+			if (pipe_in != 0)
+				close(pipe_in);
 			dup2(fd[1], STDOUT_FILENO);
-
-			dup2(redirecciones);
-			close(lo que no se use);
-			run_command();
+			if (fd[1] != 1)
+				close(fd[1]);
+			if (cmd->infile != -1)
+			{
+				dup2(cmd->infile, STDIN_FILENO);
+				close(cmd->infile);
+			}
+			if (cmd->outfile != -1)
+			{
+				dup2(cmd->outfile, STDOUT_FILENO);
+				close(cmd->outfile);
+			}
+			//run_command(mini, cmd);
+			run_execve_command(mini, cmd);
 		}
-		pipe_in = fd[0];
+		if (pipe_in != 0)
+			close(pipe_in);
+		pipe_in = dup(fd[0]);
+		close(fd[0]);
+		close(fd[1]);
 		fd[1] = STDOUT_FILENO;
 		cmd->pid = pid;
 		cmd = cmd->next;
 	}
+	if(pipe_in != 0)
+		close(pipe_in);
 	cmd = mini->cmd_list;
 	while (cmd)
 	{
