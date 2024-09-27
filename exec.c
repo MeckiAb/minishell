@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/26 20:47:23 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/27 14:49:55 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,27 +86,31 @@ void	exec_line(t_mini *mini)
 {
 	int			fd[2];
 	int			pipe_in;
+	int			pipe_out;
 	int			pid;
 	t_command	*cmd;
 
 	cmd = mini->cmd_list;
-	pipe_in = STDIN_FILENO;
 	fd[0] = STDIN_FILENO;
-	fd[1] = STDOUT_FILENO;
 	while (cmd)
 	{
-		if (cmd->next && pipe(fd) == -1)
-			perror("pipe");
+		pipe_in = dup(fd[0]);
+		if (cmd->next)
+		{
+			close(fd[0]);
+			if (cmd->next && pipe(fd) == -1)
+				perror("pipe");
+			pipe_out = fd[1];
+		}
+		else
+			pipe_out = STDOUT_FILENO;
 		pid = fork();
 		if (!pid)
 		{
-			close(fd[0]);
 			dup2(pipe_in, STDIN_FILENO);
-			if (pipe_in != 0)
-				close(pipe_in);
-			dup2(fd[1], STDOUT_FILENO);
-			if (fd[1] != 1)
-				close(fd[1]);
+			dup2(pipe_out, STDOUT_FILENO);
+			close(pipe_in);
+			close(pipe_out);
 			if (cmd->infile != -1)
 			{
 				dup2(cmd->infile, STDIN_FILENO);
@@ -120,17 +124,11 @@ void	exec_line(t_mini *mini)
 			//run_command(mini, cmd);
 			run_execve_command(mini, cmd);
 		}
-		if (pipe_in != 0)
-			close(pipe_in);
-		pipe_in = dup(fd[0]);
-		close(fd[0]);
-		close(fd[1]);
-		fd[1] = STDOUT_FILENO;
 		cmd->pid = pid;
 		cmd = cmd->next;
 	}
-	if(pipe_in != 0)
-		close(pipe_in);
+	close(fd[0]);
+	close(fd[1]);
 	cmd = mini->cmd_list;
 	while (cmd)
 	{
