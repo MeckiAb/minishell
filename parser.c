@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:28:37 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/26 19:48:14 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/30 18:35:06 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static t_command	*new_command(void)
 	cmd->path = NULL;
 	cmd->infile = -1;
 	cmd->outfile = -1;
+	cmd->pid = -1;
 	cmd->exit_status = -1;
 	cmd->next = NULL;
 	return (cmd);

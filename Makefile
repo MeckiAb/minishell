@@ -6,7 +6,7 @@
 #    By: labderra <labderra@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 12:03:18 by labderra          #+#    #+#              #
-#    Updated: 2024/09/23 09:28:59 by labderra         ###   ########.fr        #
+#    Updated: 2024/09/30 19:45:15 by labderra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ lexer.c \
 parser.c \
 exec.c \
 tools.c \
-environment.c
+environment.c \
+builtin.c
 
 OBJ = $(SRC:.c=.o)
 

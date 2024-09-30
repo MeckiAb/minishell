@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 11:42:34 by jormoral          #+#    #+#             */
-/*   Updated: 2024/09/30 12:26:03 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/30 19:47:43 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ int	run_pwd(t_mini *mini, t_command *cmd)
 	//de la copia del enviroment
 	// y en vez de retornar un entero que se guarde mini->status
 	char *pwd;
+	
+	if (!mini)
+		return (1);
+	if (!cmd)
+		return (1);
 	
 	pwd = getcwd(NULL, 0);
 	if(!pwd)

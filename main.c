@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/26 21:00:45 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/30 19:48:52 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static t_mini	*init_shell(char **argv, char **envp)
 	if (!mini->path)
 		return (NULL);
 	mini->status = 0;
+	mini->mini_in = dup(STDIN_FILENO);
+	mini->mini_out = dup(STDOUT_FILENO);
 	mini->tkn_list = NULL;
 	mini->cmd_list = NULL;
 	return (mini);
@@ -71,13 +73,12 @@ int	main(int argc, char **argv, char **envp)
 		parser(mini);
 		exec_line(mini);
 		free_commands_and_tokens(mini);
-		
-		dprintf(2, "%d\n", fileno(stdout));
-
 		free(str);
 	}
 	free_split(mini->path);
 	free_split(mini->envp);
+	close(mini->mini_in);
+	close(mini->mini_out);
 	free(mini);
-	return (70);
+	return (0);
 }

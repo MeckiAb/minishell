@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/25 11:27:33 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/30 19:17:33 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ char	**get_full_path(char **envp)
 		envp++;
 	if (!envp || !*envp)
 		return (ft_split("/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:\
-			/sbin:/bin", ':'));
-	return (ft_split(*envp + 5, ':'));
+			/sbin:/bin:.", ':'));
+	return (add_str_to_array(".", ft_split(*envp + 5, ':')));
 }
 
 static char	*get_env_item(char **envp, char *item)
