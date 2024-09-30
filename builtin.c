@@ -1,19 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 11:42:34 by jormoral          #+#    #+#             */
-/*   Updated: 2024/09/26 12:15:30 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/30 12:26:03 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	run_pwd(void)
+int	run_pwd(t_mini *mini, t_command *cmd)
 {
+	//quizas tengo que mandarle t_mini para que pueda sacar el pwd
+	//de la copia del enviroment
+	// y en vez de retornar un entero que se guarde mini->status
 	char *pwd;
 	
 	pwd = getcwd(NULL, 0);
@@ -26,3 +29,35 @@ int	run_pwd(void)
 		return (0);
 	}
 }
+
+int run_echo(t_command *cmd)
+{
+	int nflag;
+	int i;
+	int x;
+	x = 1;
+	i = 1;
+	nflag = 0;
+	while(cmd->arg_array[1][x] && cmd->arg_array[1][0] == '-')
+	{
+		if(cmd->arg_array[1][x] != 'n')
+		{
+			nflag = 0;
+			break;
+		}
+		x++;
+		nflag = 1;
+	}
+	if(nflag)
+		i++;
+	while(cmd->arg_array[i])
+	{
+		ft_putstr_fd(cmd->arg_array[i], cmd->outfile);
+		if(cmd->arg_array[i + 1])
+			ft_putstr_fd(" ", cmd->outfile);
+		i++;
+	}
+	if(nflag == 0)
+		ft_putstr_fd("\n", cmd->outfile);
+	return(0);
+} 

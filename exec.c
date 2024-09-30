@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/27 14:49:55 by labderra         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:55:06 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,16 @@ char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
 	return (p);
 }
 
-/* 
-void	run_command(t_mini *mini, t_command *cmd)
+
+int	run_command(t_mini *mini, t_command *cmd)
 {
-	char *s;
-	
-	s = ft_strdup(cmd->arg_array[0]);
-	if (!ft_strncmp(s, "echo", ft_strlen(s)))
-		run_echo(cmd);
-	else if (!ft_strncmp(s, "cd", ft_strlen(s)))
+	if (!ft_strncmp(cmd->arg_array[0], "echo", ft_strlen(cmd->arg_array[0])))
+		cmd->exit_status = run_echo(cmd);
+/* 	else if (!ft_strncmp(s, "cd", ft_strlen(s)))
 		run_cd(cmd);
-	else if (!ft_strncmp(s, "pwd", ft_strlen(s)))
-		run_pwd();
-	else if (!ft_strncmp(s, "export", ft_strlen(s)))
+ */	else if (!ft_strncmp(s, "pwd", ft_strlen(s)))
+		cmd->exit_status = run_pwd(mini, cmd);
+/* 	else if (!ft_strncmp(s, "export", ft_strlen(s)))
 		run_export(cmd);
 	else if (!ft_strncmp(s, "unset", ft_strlen(s)))
 		run_unset(cmd);
@@ -52,10 +49,11 @@ void	run_command(t_mini *mini, t_command *cmd)
 		run_env(cmd);
 	else if (!ft_strncmp(s, "exit", ft_strlen(s)))
 		run_exit(cmd);
-	else
-		run_command(cmd, mini);
+ */	else
+		return (-1);
+	return (0);
 }
- */
+
 
 void	run_execve_command(t_mini *mini, t_command *cmd)
 {
@@ -81,54 +79,29 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 		perror("Command not found");
 }
 
-
-void	exec_line(t_mini *mini)
+void	exec_child_process(t_mini *mini, int p_in, int p_out, t_command *cmd)
 {
-	int			fd[2];
-	int			pipe_in;
-	int			pipe_out;
-	int			pid;
+	dup2(p_in, STDIN_FILENO);
+	dup2(p_out, STDOUT_FILENO);
+	close(p_in);
+	close(p_out);
+	if (cmd->infile != -1)
+	{
+		dup2(cmd->infile, STDIN_FILENO);
+		close(cmd->infile);
+	}
+	if (cmd->outfile != -1)
+	{
+		dup2(cmd->outfile, STDOUT_FILENO);
+		close(cmd->outfile);
+	}
+	run_execve_command(mini, cmd);
+}
+
+static void	wait_process(t_mini *mini)
+{
 	t_command	*cmd;
 
-	cmd = mini->cmd_list;
-	fd[0] = STDIN_FILENO;
-	while (cmd)
-	{
-		pipe_in = dup(fd[0]);
-		if (cmd->next)
-		{
-			close(fd[0]);
-			if (cmd->next && pipe(fd) == -1)
-				perror("pipe");
-			pipe_out = fd[1];
-		}
-		else
-			pipe_out = STDOUT_FILENO;
-		pid = fork();
-		if (!pid)
-		{
-			dup2(pipe_in, STDIN_FILENO);
-			dup2(pipe_out, STDOUT_FILENO);
-			close(pipe_in);
-			close(pipe_out);
-			if (cmd->infile != -1)
-			{
-				dup2(cmd->infile, STDIN_FILENO);
-				close(cmd->infile);
-			}
-			if (cmd->outfile != -1)
-			{
-				dup2(cmd->outfile, STDOUT_FILENO);
-				close(cmd->outfile);
-			}
-			//run_command(mini, cmd);
-			run_execve_command(mini, cmd);
-		}
-		cmd->pid = pid;
-		cmd = cmd->next;
-	}
-	close(fd[0]);
-	close(fd[1]);
 	cmd = mini->cmd_list;
 	while (cmd)
 	{
@@ -136,3 +109,113 @@ void	exec_line(t_mini *mini)
 		cmd = cmd->next;
 	}
 }
+
+void	exec_line(t_mini *mini)
+{
+	int			fd[2];
+	int			aux[2];
+	int			pid;
+	t_command	*cmd;
+
+	cmd = mini->cmd_list;
+	aux[0] = dup(STDIN_FILENO);
+	aux[1] = dup(STDOUT_FILENO);
+	while (cmd && cmd->next)
+	{
+		if (pipe(fd) == -1)
+			perror("pipe");
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		cmd->exit_status = run_command(mini, cmd);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		cmd = cmd->next;
+	}
+	if (fd[0] != 0)
+		close(fd[0]);
+	if (fd[1] != 1)
+		close(fd[1]);
+	if (cmd)
+	{
+		dup2(aux[1], STDOUT_FILENO);
+		close(aux[1]);
+		cmd->exit_status = run_command(mini, cmd);
+		dup2(aux[0], STDIN_FILENO);
+		close(aux[0]);
+
+	}
+}
+
+
+
+
+
+	
+	{
+		if (pipe(fd) == -1)
+			perror("pipe");
+		if (check_builtin(mini, cmd) == -1)
+		{
+			pid = fork();
+			if (!pid)
+				exec_child_process(mini, pipe_in, fd[1], cmd);
+			cmd->pid = pid;
+		}
+		cmd = cmd->next;
+ 		if (pipe_in != 0)
+			close(pipe_in);
+		pipe_in = dup(fd[0]);
+		close(fd[0]);
+		close(fd[1]);
+	}
+	if (cmd)
+	{
+		if (check_builtin(mini, cmd) == -1)
+		{
+			pid = fork();
+			if (!pid)
+				exec_child_process(mini, pipe_in, 1, cmd);
+			cmd->pid = pid;
+		}
+		close(pipe_in);
+	}
+}
+
+
+/* 
+void	exec_line(t_mini *mini)
+{
+	int			fd[2];
+	int			pipe_in;
+	int			pid;
+	t_command	*cmd;
+
+	cmd = mini->cmd_list;
+	pipe_in = 0;
+	fd[1] = 1;
+	while (cmd)
+	{
+		if (cmd->next && pipe(fd) == -1)
+			perror("pipe");
+		pid = fork();
+		if (!pid)
+			exec_child_process(mini, pipe_in, fd[1], cmd);
+		cmd->pid = pid;
+		cmd = cmd->next;
+		if (cmd)
+		{
+	 		if (pipe_in != 0)
+				close(pipe_in);
+			pipe_in = dup(fd[0]);
+			close(fd[0]);
+			if (fd[1] != 1)
+				close(fd[1]);
+		}
+	}
+
+	
+	if(pipe_in)
+		close(pipe_in);
+	wait_process(mini);
+}
+ */
