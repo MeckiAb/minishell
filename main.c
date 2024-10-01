@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/30 19:48:52 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/01 13:20:40 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,14 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1 || !mini)
 		return (1);
 	signal(SIGINT, handle_sigint);
-	//signal(SIGQUIT, handle_sigquit);
+//	signal(SIGQUIT, handle_sigquit);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		str = readline("MininiShell :\\>");
 		if (!str)
 		{
-			printf("%s", "exit\n");
+			printf("exit\n");
 			break ;
 		}
 		add_history(str);
@@ -75,6 +75,7 @@ int	main(int argc, char **argv, char **envp)
 		free_commands_and_tokens(mini);
 		free(str);
 	}
+	rl_clear_history();
 	free_split(mini->path);
 	free_split(mini->envp);
 	close(mini->mini_in);

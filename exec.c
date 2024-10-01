@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/30 19:44:21 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/01 12:12:14 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
 	return (p);
 }
 
-void	child_redir(t_command *cmd)
+void	apply_redir(t_command *cmd)
 {
 	if (cmd->infile != -1)
 	{
@@ -44,6 +44,14 @@ void	child_redir(t_command *cmd)
 		dup2(cmd->outfile, STDOUT_FILENO);
 		close(cmd->outfile);
 	}
+}
+
+void	revert_redir(t_mini *mini, t_command *cmd)
+{
+	if (cmd->infile != -1)
+		dup2(mini->mini_in, STDIN_FILENO);
+	if (cmd->outfile != -1)
+		dup2(mini->mini_out, STDOUT_FILENO);
 }
 
 void	run_execve_command(t_mini *mini, t_command *cmd)
@@ -63,8 +71,9 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 			pid = fork();
 			if (!pid)
 			{
-				child_redir(cmd);
+				apply_redir(cmd);
 				execve(path_cmd, cmd->arg_array, mini->envp);
+				revert_redir(mini, cmd);
 			}
 			else
 				cmd->pid = pid;

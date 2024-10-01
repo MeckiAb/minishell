@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/30 19:44:55 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/01 12:13:03 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ void	insert_variable_value(t_mini *mini, char **str);
 char	*check_syntax(t_mini *mini);
 char	**add_str_to_array(char *str, char **list);
 char	**copy_environmet(char **envp);
+void	apply_redir(t_command *cmd);
+void	revert_redir(t_mini *mini, t_command *cmd);
 
 int run_echo(t_command *cmd);
 int	run_pwd(t_mini *mini, t_command *cmd);
