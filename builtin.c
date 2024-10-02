@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 11:42:34 by jormoral          #+#    #+#             */
-/*   Updated: 2024/09/30 19:47:43 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/02 11:39:29 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,55 +14,82 @@
 
 int	run_pwd(t_mini *mini, t_command *cmd)
 {
-	//quizas tengo que mandarle t_mini para que pueda sacar el pwd
-	//de la copia del enviroment
-	// y en vez de retornar un entero que se guarde mini->status
-	char *pwd;
-	
-	if (!mini)
-		return (1);
-	if (!cmd)
-		return (1);
-	
+	char	*pwd;
+
+	apply_redir(cmd);
 	pwd = getcwd(NULL, 0);
 	if(!pwd)
+	{
+		revert_redir(mini, cmd);
 		return (1);
+	}
 	else
 	{
 		printf("%s\n", pwd);
 		free (pwd);
+		revert_redir(mini, cmd);
 		return (0);
 	}
 }
 
-int run_echo(t_command *cmd)
+int run_echo(t_mini *mini, t_command *cmd)
 {
 	int nflag;
 	int i;
-	int x;
-	x = 1;
-	i = 1;
+
+	apply_redir(cmd);
+	i = 0;
 	nflag = 0;
-	while(cmd->arg_array[1][x] && cmd->arg_array[1][0] == '-')
+	if (cmd->arg_array[1] && cmd->arg_array[1][i++] == '-')
 	{
-		if(cmd->arg_array[1][x] != 'n')
-		{
-			nflag = 0;
-			break;
-		}
-		x++;
-		nflag = 1;
+		while (cmd->arg_array[1][i] == 'n')
+			i += 1;
+		nflag = cmd->arg_array[1][i] == '\0';
 	}
-	if(nflag)
-		i++;
-	while(cmd->arg_array[i])
+	i = 1;
+	while(cmd->arg_array[i + nflag])
 	{
-		ft_putstr_fd(cmd->arg_array[i], cmd->outfile);
-		if(cmd->arg_array[i + 1])
-			ft_putstr_fd(" ", cmd->outfile);
-		i++;
+		printf("%s", cmd->arg_array[i + nflag]);
+		if(cmd->arg_array[++i + nflag])
+			printf(" ");
 	}
 	if(nflag == 0)
-		ft_putstr_fd("\n", cmd->outfile);
+		printf("\n");
+	revert_redir(mini, cmd);
 	return(0);
-} 
+}
+
+int	run_export(t_mini *mini, t_command *cmd)
+{
+	int		i;
+	char	***env;
+	int		c;
+	char	**temp;
+
+	apply_redir(cmd);
+	env =  mini->envp_dictionary;
+	i = 0;
+	while(env[i] && env[i + 1])
+	{
+		c = 0;
+		while(env[i][0][c] == env[i + 1][0][c])
+			c++;
+		if(env[i][0][c] > env[i + 1][0][c])
+		{
+			temp = env[i];
+			env[i]= env[i + 1];
+			env[i + 1] = temp;
+			i = 0;
+		}
+		else
+			i++;
+	}
+	i = 0; 
+	while(env[i])
+	{
+		printf("declare -x %s=\"%s\"\n", env[i][0], env[i][1]);	
+		i++;
+	}
+	revert_redir(mini, cmd);
+	return (0);
+}

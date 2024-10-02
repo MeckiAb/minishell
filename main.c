@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/01 13:20:40 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:13:59 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static t_mini	*init_shell(char **argv, char **envp)
 		return (NULL);
 	mini->argv = argv;
 	mini->envp = copy_environmet(envp);
+	mini->envp_dictionary = copy_split_environment(mini->envp);
 	mini->path = get_full_path(mini->envp);
 	if (!mini->path)
 		return (NULL);

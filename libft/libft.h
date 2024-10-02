@@ -6,14 +6,14 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 09:00:09 by labderra          #+#    #+#             */
-/*   Updated: 2024/06/11 14:45:28 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:02:06 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 100
+#  define BUFFER_SIZE 1
 # endif
 # include <stddef.h>
 # include <stdlib.h>

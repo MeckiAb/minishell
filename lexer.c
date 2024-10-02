@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/25 11:31:32 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/02 12:59:34 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,18 @@ static void	insert_token(t_mini *mini, char *str, int tkn_type)
 
 static void	insert_control(t_mini *mini, char **str)
 {
+	int	i;
+	
 	if (**str == '<' && *(*str + 1) == '<' && ++*str && ++*str)
-		insert_token(mini, "<<", 1);
+	{
+		i = 0;
+		while (*str[i] == ' ' || *str[i] == '\t' || *str[i] == '\n')
+			i++;
+		if (*str[i] == '\'' || *str[i] == '\"')
+			insert_token(mini, "<<", 1);
+		else
+			insert_token(mini, "<$", 1);
+	}
 	else if (**str == '>' && *(*str + 1) == '>' && ++*str && ++*str)
 		insert_token(mini, ">>", 1);
 	else if (**str == '<' && ++*str)

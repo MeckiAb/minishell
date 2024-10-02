@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/30 19:17:33 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:12:35 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,24 @@ char	**copy_environmet(char **envp)
 	p = ft_calloc(sizeof(char *), 1);
 	while (envp && envp[i])
 		p = add_str_to_array(envp[i++], p);		
+	return (p);
+}
+
+char	***copy_split_environment(char **envp)
+{
+	char	***p;
+	int		i;
+	
+	i = 0;
+	while(envp && envp[i])
+		i++;
+	p = ft_calloc(sizeof(char **), i + 1);
+	i = 0;
+	while (envp && envp[i])
+	{
+		p[i] = ft_split(envp[i], '=');
+		i++;
+	}	
 	return (p);
 }
 
