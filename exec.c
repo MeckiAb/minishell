@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/02 11:44:55 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:35:29 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	revert_redir(t_mini *mini, t_command *cmd)
 		dup2(mini->mini_in, STDIN_FILENO);
 	if (cmd->outfile != -1)
 		dup2(mini->mini_out, STDOUT_FILENO);
+	if (!access(".heredoctmp", F_OK))
+		unlink(".heredoctmp");
 }
 
 void	run_execve_command(t_mini *mini, t_command *cmd)
@@ -74,7 +76,6 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 				apply_redir(cmd);
 				execve(path_cmd, cmd->arg_array, mini->envp);
 				perror("execve");
-				revert_redir(mini, cmd);
 			}
 			else
 				cmd->pid = pid;
@@ -86,6 +87,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 	}
 	if (cmd->arg_array && cmd->arg_array[0] && !aux[i])
 		perror("Command not found");
+	revert_redir(mini, cmd);
 }
 
 void	run_command(t_mini *mini, t_command *cmd)
@@ -96,15 +98,15 @@ void	run_command(t_mini *mini, t_command *cmd)
 		run_cd(cmd);
  */	else if (!ft_strncmp(cmd->arg_array[0], "pwd", 3))
 		cmd->exit_status = run_pwd(mini, cmd);
- 	else if (!ft_strncmp(cmd->arg_array[0], "export", 6))
+/* 	else if (!ft_strncmp(cmd->arg_array[0], "export", 6))
 		cmd->exit_status = run_export(mini, cmd);
-/*	else if (!ft_strncmp(cmd->arg_array[0], "unset", 5))
+	else if (!ft_strncmp(cmd->arg_array[0], "unset", 5))
 		run_unset(cmd);
-	else if (!ft_strncmp(cmd->arg_array[0], "env", 3))
-		run_env(cmd);
+ */	else if (!ft_strncmp(cmd->arg_array[0], "env", 3))
+		cmd->exit_status = run_env(mini, cmd);
 	else if (!ft_strncmp(cmd->arg_array[0], "exit", 4))
-		run_exit(cmd);
- */	else
+		cmd->exit_status = run_exit(mini, cmd);
+	else
 		run_execve_command(mini, cmd);
 }
 
@@ -117,6 +119,7 @@ static void	wait_process(t_mini *mini)
 	{
 		if (cmd->pid != -1)
 			waitpid(cmd->pid, &(cmd->exit_status), 0);
+		mini->status = cmd->exit_status;
 		cmd = cmd->next;
 	}
 }

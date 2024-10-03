@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/02 11:24:11 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:09:40 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	free_split(char **str);
 void	free_list(t_tkn **tkn_list);
 void	free_commands_and_tokens(t_mini *mini);
 char	*join_before_line(char *prefix, char *line);
+long long	ft_atoll(const char *str);
+
 
 void	lexer(t_mini *mini, char *str);
 void	parser(t_mini *mini);
@@ -77,5 +79,8 @@ void	revert_redir(t_mini *mini, t_command *cmd);
 int 	run_echo(t_mini *mini, t_command *cmd);
 int		run_pwd(t_mini *mini, t_command *cmd);
 int		run_export(t_mini *mini, t_command *cmd);
+int		run_env(t_mini *mini, t_command *cmd);
+int		run_exit(t_mini *mini, t_command *cmd);
+
 
 #endif

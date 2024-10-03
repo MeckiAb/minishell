@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/09/23 12:45:40 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:08:25 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,30 @@ char	*check_syntax(t_mini *mini)
 	if (prev_tkn == 0)
 		return ("EOF");
 	return (NULL);
+}
+
+long long	ft_atoll(const char *str)
+{
+	int	sign;
+	long long	acc;
+
+	sign = 1;
+	acc = 0;
+	while (*str == '\n' || *str == '\t' || *str == '\v' || *str == '\f'
+		|| *str == '\r' || *str == ' ')
+		str++;
+	if (*str == '+' || *str == '-')
+	{
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	while (*str >= '0' && *str <= '9')
+	{
+		acc = acc * 10 + *str - 48;
+		str++;
+	}
+	return (sign * acc);
 }
 
 /* 

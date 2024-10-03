@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 11:42:34 by jormoral          #+#    #+#             */
-/*   Updated: 2024/10/02 11:39:29 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:11:34 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,36 @@ int	run_export(t_mini *mini, t_command *cmd)
 	}
 	revert_redir(mini, cmd);
 	return (0);
+}
+
+int	run_env(t_mini *mini, t_command *cmd)
+{
+	char	**aux;
+
+	apply_redir(cmd);
+	aux = mini->envp;
+	if(!aux)
+	{
+		revert_redir(mini, cmd);
+		return(1);
+	}
+	while(aux && *aux)
+		printf("%s\n", *aux++);
+	revert_redir(mini, cmd);
+	return(0);
+}
+
+int	run_exit(t_mini *mini, t_command *cmd)
+{
+	long long	result;
+	(void)mini;
+
+	result = 0;
+	if (cmd->arg_array && !cmd->arg_array[1])
+		exit (0);
+	if (cmd->arg_array && cmd->arg_array[1])
+	{
+		result = ft_atoll(cmd->arg_array[1]);
+	}
+	exit (result % 256);
 }
