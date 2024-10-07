@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/03 14:09:40 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:38:04 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,9 @@ char	**get_full_path(char **envp);
 void	free_split(char **str);
 void	free_list(t_tkn **tkn_list);
 void	free_commands_and_tokens(t_mini *mini);
+void	free_dictionary(char ***dict);
 char	*join_before_line(char *prefix, char *line);
-long long	ft_atoll(const char *str);
+unsigned long long	ft_atoll(const char *str);
 
 
 void	lexer(t_mini *mini, char *str);
@@ -76,9 +77,15 @@ char	***copy_split_environment(char **envp);
 void	apply_redir(t_command *cmd);
 void	revert_redir(t_mini *mini, t_command *cmd);
 
+char	***triple_copy_add(char ***triple);
+void	print_errors(char *s1, char *s2, char *s3);
+
+
 int 	run_echo(t_mini *mini, t_command *cmd);
 int		run_pwd(t_mini *mini, t_command *cmd);
 int		run_export(t_mini *mini, t_command *cmd);
+int		only_export(t_mini *mini, t_command *cmd);
+void	alpha_export(char ***env);
 int		run_env(t_mini *mini, t_command *cmd);
 int		run_exit(t_mini *mini, t_command *cmd);
 

@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/03 14:08:25 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/07 17:51:14 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,30 +129,6 @@ char	*check_syntax(t_mini *mini)
 	return (NULL);
 }
 
-long long	ft_atoll(const char *str)
-{
-	int	sign;
-	long long	acc;
-
-	sign = 1;
-	acc = 0;
-	while (*str == '\n' || *str == '\t' || *str == '\v' || *str == '\f'
-		|| *str == '\r' || *str == ' ')
-		str++;
-	if (*str == '+' || *str == '-')
-	{
-		if (*str == '-')
-			sign = -1;
-		str++;
-	}
-	while (*str >= '0' && *str <= '9')
-	{
-		acc = acc * 10 + *str - 48;
-		str++;
-	}
-	return (sign * acc);
-}
-
 /* 
 void	del_empty_tokens(t_tkn **tkn_list)
 {
@@ -181,3 +157,10 @@ void	del_empty_tokens(t_tkn **tkn_list)
 	}
 }
  */
+
+void	print_errors(char *s1, char *s2, char *s3)
+{
+	ft_putstr_fd(s1, 2);
+	ft_putstr_fd(s2, 2);
+	ft_putstr_fd(s3, 2);
+}
