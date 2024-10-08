@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/03 14:21:32 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:00:30 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		str = readline("MininiShell :\\>");
+		str = readline("MiniShell :\\>");
 		if (!str)
 		{
 			printf("exit\n");

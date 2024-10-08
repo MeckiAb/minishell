@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/07 11:14:15 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:24:59 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,9 @@ void	insert_variable_value(t_mini *mini, char **str)
 	char	*value;
 	int		j;
 
-	if (**str == '0' && ++*str)
+	if (**str == '?' && ++*str)
+		value = ft_itoa(mini->status /256);
+	else if (**str == '0' && ++*str)
 		value = ft_strdup(mini->argv[0]);
 	else if (**str > '0' && **str <= '9' && ++*str)
 		value = ft_strdup("");

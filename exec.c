@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/03 13:35:29 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:13:11 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 				apply_redir(cmd);
 				execve(path_cmd, cmd->arg_array, mini->envp);
 				perror("execve");
+				cmd->exit_status = 127;
 			}
 			else
 				cmd->pid = pid;
@@ -86,7 +87,10 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 		i++;
 	}
 	if (cmd->arg_array && cmd->arg_array[0] && !aux[i])
-		perror("Command not found");
+	{
+		cmd->exit_status = 127;
+		print_errors(cmd->arg_array[0], ": command not found", "\n");
+	}
 	revert_redir(mini, cmd);
 }
 
@@ -98,9 +102,9 @@ void	run_command(t_mini *mini, t_command *cmd)
 		run_cd(cmd);
  */	else if (!ft_strncmp(cmd->arg_array[0], "pwd", 3))
 		cmd->exit_status = run_pwd(mini, cmd);
-/* 	else if (!ft_strncmp(cmd->arg_array[0], "export", 6))
+	else if (!ft_strncmp(cmd->arg_array[0], "export", 6))
 		cmd->exit_status = run_export(mini, cmd);
-	else if (!ft_strncmp(cmd->arg_array[0], "unset", 5))
+/* 	else if (!ft_strncmp(cmd->arg_array[0], "unset", 5))
 		run_unset(cmd);
  */	else if (!ft_strncmp(cmd->arg_array[0], "env", 3))
 		cmd->exit_status = run_env(mini, cmd);

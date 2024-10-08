@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 11:42:34 by jormoral          #+#    #+#             */
-/*   Updated: 2024/10/07 18:54:21 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:19:58 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,64 +116,13 @@ int	run_exit(t_mini *mini, t_command *cmd)
 		exit(2);
 	}
 	if (cmd->arg_array[1] && cmd->arg_array[2])
-		return (print_errors("exit\n", "",
+		return (revert_redir(mini, cmd), print_errors("exit\n", "",
 			"minishell: exit: : too many arguments\n"), 1);
 	printf("exit\n");
 	exit(check_exit_argument(cmd->arg_array[1]));
 	revert_redir(mini, cmd);
 }
 
-/* 
-int	run_exit(t_mini *mini, t_command *cmd)
-{
-	unsigned long long	result;
-	char				*temp;
-	(void)				mini;
-	int					flag;
-	int					i;
-
-	i = 0;
-	flag = 0;
-	result = 0;
-	while(cmd->arg_array[1])
-	{
-		if((!cmd->arg_array[1][0]) || (cmd->arg_array[1][i] < '0'
-			|| cmd->arg_array[1][i] > '9'))
-		{
-			print_errors("exit\nminishell: exit:", cmd->arg_array[1],
-				" numeric argument required\n");
-			exit(2);
-		}
-		else if (!cmd->arg_array[1][i])
-			break ;
-		i++;
-	}
-	if(cmd->arg_array[1] && cmd->arg_array[2])
-		return (print_errors("exit\n", "",
-			"minishell: exit: : too many arguments\n"), 1);
-	if (cmd->arg_array && !cmd->arg_array[1])
-		exit (0);
-	if (cmd->arg_array[1][i] == '-')
-	{
-		flag = 1;
-		i++;
-	}
-	temp = ft_strdup(cmd->arg_array[1] + flag);
-	if (cmd->arg_array && cmd->arg_array[1])
-		result = ft_atoll(temp);
-	if (result > 9223372036854775807)
-	{
-		printf("exit\n");
-		printf("bash: exit: %s : numeric argument required\n", cmd->arg_array[1]);
-		exit(2);
-	}
-	flag = 1;
-	if(cmd->arg_array[1][0] == '-')
-		flag = -1;
-	printf("exit\n");
-	exit((result * flag) % 256);
-}
- */
 int	check_export(char *str, int *flag)
 {
 	int	i;

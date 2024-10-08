@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/02 12:59:34 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:41:21 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static void	insert_control(t_mini *mini, char **str)
 	if (**str == '<' && *(*str + 1) == '<' && ++*str && ++*str)
 	{
 		i = 0;
-		while (*str[i] == ' ' || *str[i] == '\t' || *str[i] == '\n')
+		while ((*str)[i] == ' ' || (*str)[i] == '\t' || (*str)[i] == '\n')
 			i++;
-		if (*str[i] == '\'' || *str[i] == '\"')
+		if ((*str)[i] == '\'' || (*str)[i] == '\"')
 			insert_token(mini, "<<", 1);
 		else
 			insert_token(mini, "<$", 1);
@@ -91,6 +91,9 @@ static void	insert_word(t_mini *mini, char **str)
 	{
 		if ((**str == '\'' && quote <= 0) || (**str == '\"' && quote >= 0))
 			quote = select_quote(quote, *(*str)++);
+		else if (**str == '$' && quote >= 0
+			&& *(*str + 1) == '?' && ++*str)
+			insert_variable_value(mini, str);
 		else if (**str == '$' && quote >= 0
 			&& (ft_isalnum(*(*str + 1)) || *(*str + 1) == '_') && ++*str)
 			insert_variable_value(mini, str);
