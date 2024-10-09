@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/07 12:38:04 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/09 13:16:36 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	revert_redir(t_mini *mini, t_command *cmd);
 
 char	***triple_copy_add(char ***triple);
 void	print_errors(char *s1, char *s2, char *s3);
-
+int 	len_before_equal(char *s);
 
 int 	run_echo(t_mini *mini, t_command *cmd);
 int		run_pwd(t_mini *mini, t_command *cmd);
@@ -88,6 +88,8 @@ int		only_export(t_mini *mini, t_command *cmd);
 void	alpha_export(char ***env);
 int		run_env(t_mini *mini, t_command *cmd);
 int		run_exit(t_mini *mini, t_command *cmd);
+int		run_unset(t_mini *mini, t_command *cmd);
+
 
 
 #endif

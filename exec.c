@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/08 14:13:11 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/09 13:28:27 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,19 +96,21 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 
 void	run_command(t_mini *mini, t_command *cmd)
 {
-	if (!ft_strncmp(cmd->arg_array[0], "echo", 4))
+	if (!cmd->arg_array[0])
+		cmd->arg_array[0] = ft_strdup("");
+	if (!ft_strncmp(cmd->arg_array[0], "echo", 5))
 		cmd->exit_status = run_echo(mini, cmd);
-/* 	else if (!ft_strncmp(cmd->arg_array[0], "cd", 2))
+/* 	else if (!ft_strncmp(cmd->arg_array[0], "cd", 3))
 		run_cd(cmd);
- */	else if (!ft_strncmp(cmd->arg_array[0], "pwd", 3))
+ */	else if (!ft_strncmp(cmd->arg_array[0], "pwd", 4))
 		cmd->exit_status = run_pwd(mini, cmd);
-	else if (!ft_strncmp(cmd->arg_array[0], "export", 6))
+	else if (!ft_strncmp(cmd->arg_array[0], "export", 7))
 		cmd->exit_status = run_export(mini, cmd);
-/* 	else if (!ft_strncmp(cmd->arg_array[0], "unset", 5))
+/* 	else if (!ft_strncmp(cmd->arg_array[0], "unset", 6))
 		run_unset(cmd);
- */	else if (!ft_strncmp(cmd->arg_array[0], "env", 3))
+ */	else if (!ft_strncmp(cmd->arg_array[0], "env", 4))
 		cmd->exit_status = run_env(mini, cmd);
-	else if (!ft_strncmp(cmd->arg_array[0], "exit", 4))
+	else if (!ft_strncmp(cmd->arg_array[0], "exit", 5))
 		cmd->exit_status = run_exit(mini, cmd);
 	else
 		run_execve_command(mini, cmd);
@@ -123,7 +125,7 @@ static void	wait_process(t_mini *mini)
 	{
 		if (cmd->pid != -1)
 			waitpid(cmd->pid, &(cmd->exit_status), 0);
-		mini->status = cmd->exit_status;
+		mini->status = WEXITSTATUS(cmd->exit_status);
 		cmd = cmd->next;
 	}
 }

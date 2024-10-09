@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/08 13:41:21 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/09 11:25:54 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static void	insert_word(t_mini *mini, char **str)
 
 	j = 0;
 	quote = 0;
-	tmp = ft_calloc(sizeof(char), 1024);
+	tmp = ft_calloc(sizeof(char), ft_strlen(*str) + 1);
 	while (**str && (quote || !(**str == ' ' || **str == '\t' || **str == '\n'
 		|| **str == '<' || **str == '>' || **str == '|')))
 	{

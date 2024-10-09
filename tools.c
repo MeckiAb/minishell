@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/07 17:51:14 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/09 13:37:16 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void	free_split(char **str)
 	i = 0;
 	while (str && str[i])
 		free(str[i++]);
-	free(str);
+	if (str)
+		free(str);
 }
 
 void	free_commands_and_tokens(t_mini *mini)
@@ -124,7 +125,7 @@ char	*check_syntax(t_mini *mini)
 		prev_tkn = p->tkn_type;
 		p = p->next;
 	}
-	if (prev_tkn == 0)
+	if (prev_tkn == 0 || prev_tkn == 1)
 		return ("EOF");
 	return (NULL);
 }
@@ -157,6 +158,16 @@ void	del_empty_tokens(t_tkn **tkn_list)
 	}
 }
  */
+
+int len_before_equal(char *s)
+{
+	int i;
+
+	i = 0;
+	while(s[i] && s[i] != '=')
+		i++;
+	return(i);
+}
 
 void	print_errors(char *s1, char *s2, char *s3)
 {
