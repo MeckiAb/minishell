@@ -85,7 +85,7 @@ static void	insert_word(t_mini *mini, char **str)
 
 	j = 0;
 	quote = 0;
-	tmp = ft_calloc(sizeof(char), ft_strlen(*str) + 1);
+	tmp = ft_calloc(sizeof(char), 4096);
 	while (**str && (quote || !(**str == ' ' || **str == '\t' || **str == '\n'
 		|| **str == '<' || **str == '>' || **str == '|')))
 	{

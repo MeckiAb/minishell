@@ -20,7 +20,8 @@ exec.c \
 tools.c \
 environment.c \
 builtin.c \
-unset.c
+unset.c \
+cd.c
 
 OBJ = $(SRC:.c=.o)
 

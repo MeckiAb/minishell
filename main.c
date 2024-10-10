@@ -81,7 +81,6 @@ int	main(int argc, char **argv, char **envp)
 	char		*str;
 	t_mini		*mini;
 
-	(void)argv;
 	mini = init_shell(argv, envp);
 	if (argc != 1 || !mini)
 		return (1);

@@ -80,6 +80,7 @@ void	revert_redir(t_mini *mini, t_command *cmd);
 char	***triple_copy_add(char ***triple);
 void	print_errors(char *s1, char *s2, char *s3);
 int 	len_before_equal(char *s);
+int		search_env(t_mini *mini, char *str);
 
 int 	run_echo(t_mini *mini, t_command *cmd);
 int		run_pwd(t_mini *mini, t_command *cmd);
@@ -89,6 +90,7 @@ void	alpha_export(char ***env);
 int		run_env(t_mini *mini, t_command *cmd);
 int		run_exit(t_mini *mini, t_command *cmd);
 int		run_unset(t_mini *mini, t_command *cmd);
+int		run_cd(t_mini *mini, t_command *cmd);
 
 
 

@@ -81,8 +81,13 @@ char	***copy_split_environment(char **envp)
 	i = 0;
 	while (envp && envp[i])
 	{
-		p[i] = ft_split(envp[i], '=');
-		i++;
+		if(!ft_strncmp(envp[i], "_=", 2))
+			i++;
+		else
+		{
+			p[i] = ft_split(envp[i], '=');
+			i++;
+		}
 	}	
 	return (p);
 }

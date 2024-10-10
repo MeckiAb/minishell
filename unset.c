@@ -23,7 +23,7 @@ static char	**unset_envp(t_mini *mini, t_command *cmd, char **temp)
 	while(mini->envp[i])
 	{
 		j = 1;
-		while(cmd->arg_array[j]) // && !ft_strchr(cmd->arg_array[j], '='))
+		while(cmd->arg_array[j])
 		{
 			if (!ft_strncmp(mini->envp[i], cmd->arg_array[j], 
 				len_before_equal(mini->envp[i])))

@@ -65,9 +65,9 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 
 	aux = mini->path;
 	i = 0;
+	path_cmd = ft_strdup(cmd->arg_array[0]);
 	while(aux[i])
 	{
-		path_cmd = triple_strjoin(aux[i], "/", cmd->arg_array[0]);
 		if(path_cmd && access(path_cmd, X_OK) == 0)
 		{
 			pid = fork();
@@ -84,6 +84,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 			break ;
 		}
 		free(path_cmd);
+		path_cmd = triple_strjoin(aux[i], "/", cmd->arg_array[0]);
 		i++;
 	}
 	if (cmd->arg_array && cmd->arg_array[0] && !aux[i])
@@ -100,15 +101,15 @@ void	run_command(t_mini *mini, t_command *cmd)
 		cmd->arg_array[0] = ft_strdup("");
 	if (!ft_strncmp(cmd->arg_array[0], "echo", 5))
 		cmd->exit_status = run_echo(mini, cmd);
-/* 	else if (!ft_strncmp(cmd->arg_array[0], "cd", 3))
-		run_cd(cmd);
- */	else if (!ft_strncmp(cmd->arg_array[0], "pwd", 4))
+	else if (!ft_strncmp(cmd->arg_array[0], "cd", 3))
+		cmd->exit_status = run_cd(mini, cmd);
+	else if (!ft_strncmp(cmd->arg_array[0], "pwd", 4))
 		cmd->exit_status = run_pwd(mini, cmd);
 	else if (!ft_strncmp(cmd->arg_array[0], "export", 7))
 		cmd->exit_status = run_export(mini, cmd);
-/* 	else if (!ft_strncmp(cmd->arg_array[0], "unset", 6))
-		run_unset(cmd);
- */	else if (!ft_strncmp(cmd->arg_array[0], "env", 4))
+	else if (!ft_strncmp(cmd->arg_array[0], "unset", 6))
+		cmd->exit_status = run_unset(mini, cmd);
+	else if (!ft_strncmp(cmd->arg_array[0], "env", 4))
 		cmd->exit_status = run_env(mini, cmd);
 	else if (!ft_strncmp(cmd->arg_array[0], "exit", 5))
 		cmd->exit_status = run_exit(mini, cmd);
