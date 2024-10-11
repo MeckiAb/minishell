@@ -44,7 +44,7 @@ static char	*expand_heredoc_dollar(t_mini *mini, char **str)
 	char	*backup;
 
 	i = 0;
-	tmp = ft_calloc(sizeof(char), ft_strlen(*str));
+	tmp = ft_calloc(sizeof(char), 4096);
 	if (!tmp)
 		return (NULL);
 	backup = *str;

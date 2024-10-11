@@ -22,6 +22,8 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
+extern int	global_signal;
+
 typedef struct s_tkn
 {
 	int				tkn_type;

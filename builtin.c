@@ -272,7 +272,7 @@ int	run_export(t_mini *mini, t_command *cmd)
 	{
 		if (!check_export(cmd->arg_array[i], &flag))
 		{
-			printf("bash: export:");
+			printf("minishell: export:");
 			printf(" ´%s': not a valid identifier\n", cmd->arg_array[i]);
 			cmd->exit_status = 1;
 		}

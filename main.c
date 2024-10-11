@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int	global_signal;
+
 static t_mini	*init_shell(char **argv, char **envp)
 {
 	t_mini	*mini;
@@ -63,17 +65,16 @@ void	free_shell(t_mini *mini)
 void handle_sigint(int sig)
 {
 	(void)sig;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
-void handle_sigquit(int sig)
-{
-	(void)sig;
-	printf("Quit (core dumped)\n");
-	exit(131);
+	if (global_signal)
+		printf("\n");
+	else
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	sigemptyset(global_signal);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -84,8 +85,8 @@ int	main(int argc, char **argv, char **envp)
 	mini = init_shell(argv, envp);
 	if (argc != 1 || !mini)
 		return (1);
+	sigemptyset(global_signal);
 	signal(SIGINT, handle_sigint);
-//	signal(SIGQUIT, handle_sigquit);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
@@ -101,6 +102,7 @@ int	main(int argc, char **argv, char **envp)
 		exec_line(mini);
 		free_commands_and_tokens(mini);
 		free(str);
+		global_signal = 0;
 	}
 	free_shell(mini);
 	return (0);

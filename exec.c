@@ -63,6 +63,47 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 	int		pid;
 	int		i;
 
+	aux = get_full_path(mini->envp);
+	i = 0;
+	path_cmd = ft_strdup(cmd->arg_array[0]);
+	while(aux && aux[i] && path_cmd && access(path_cmd, X_OK) != 0)
+	{
+		free(path_cmd);
+		path_cmd = triple_strjoin(aux[i++], "/", cmd->arg_array[0]);
+	}
+	if (access(path_cmd, X_OK) == 0)
+	{
+		pid = fork();
+		if (!pid)
+		{
+			apply_redir(cmd);
+			execve(path_cmd, cmd->arg_array, mini->envp);
+			perror("execve");
+			cmd->exit_status = 127;
+		}
+		else
+			cmd->pid = pid;
+	}
+	else
+	{
+		if (cmd->arg_array && cmd->arg_array[0] && !aux[i])
+		{
+			cmd->exit_status = 127;
+			print_errors(cmd->arg_array[0], ": command not found", "\n");
+		}
+	}
+	free_split(aux);
+	free(path_cmd);
+	revert_redir(mini, cmd);
+}
+/* 
+void	run_execve_command(t_mini *mini, t_command *cmd)
+{
+	char	**aux;
+	char	*path_cmd;
+	int		pid;
+	int		i;
+
 	aux = mini->path;
 	i = 0;
 	path_cmd = ft_strdup(cmd->arg_array[0]);
@@ -94,7 +135,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 	}
 	revert_redir(mini, cmd);
 }
-
+ */
 void	run_command(t_mini *mini, t_command *cmd)
 {
 	if (!cmd->arg_array[0])
