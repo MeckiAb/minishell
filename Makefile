@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = minishell
-CC = clang -Wall -Werror -Wextra -g -fsanitize=address
+CC = clang -Wall -Werror -Wextra -g #-fsanitize=address
 LIBFT = libft/libft.a
 SRC = main.c \
 lexer.c \

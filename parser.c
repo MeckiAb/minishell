@@ -62,6 +62,18 @@ static char	*expand_heredoc_dollar(t_mini *mini, char **str)
 	return(tmp);
 }
 
+void	handle_sigint_heredoc(int sig)
+{
+	(void)sig;
+	printf("-- Here-document cancelled. Press Enter to continue --");
+	rl_on_new_line();
+	printf("\n");
+	//rl_replace_line("", 0);
+	//rl_redisplay();
+	signal(SIGINT, handle_sigint_main);
+
+}
+
 static int heredoc(t_mini *mini, char *lmt, int xpand)
 {
 	char	*aux_str;
@@ -71,11 +83,13 @@ static int heredoc(t_mini *mini, char *lmt, int xpand)
 	size = ft_strlen(lmt);
 	if (pipe(fd) == -1)
 		return (-1);
-	write(1, "heredoc>", 9);
-	aux_str = get_next_line(0);
-	while (aux_str)
+	while(1)
 	{
-		if (!ft_strncmp(aux_str, lmt, size) && aux_str[size] == '\n')
+		signal(SIGINT, handle_sigint_heredoc);
+		aux_str = readline("heredoc>");
+		if (!aux_str || !*aux_str)
+			break ;
+		if (!ft_strncmp(aux_str, lmt, size + 1))
 		{
 			free(aux_str);
 			break ;
@@ -83,10 +97,10 @@ static int heredoc(t_mini *mini, char *lmt, int xpand)
 		if (xpand)
 			aux_str = expand_heredoc_dollar(mini, &aux_str);
 		write(fd[1], aux_str, ft_strlen(aux_str));
+		write(fd[1], "\n", 1);
 		free(aux_str);
-		write(1, "heredoc>", 9);
-		aux_str = get_next_line(0);
 	}
+	free(aux_str);
 	close(fd[1]);
 	return (fd[0]);
 }

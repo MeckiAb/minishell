@@ -56,6 +56,13 @@ void	revert_redir(t_mini *mini, t_command *cmd)
 		unlink(".heredoctmp");
 }
 
+void	handle_sigint_execve(int sig)
+{
+	(void)sig;
+	printf("\n");
+	signal(SIGINT, handle_sigint_main);
+}
+
 void	run_execve_command(t_mini *mini, t_command *cmd)
 {
 	char	**aux;
@@ -73,6 +80,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 	}
 	if (access(path_cmd, X_OK) == 0)
 	{
+			signal(SIGINT, handle_sigint_execve);
 		pid = fork();
 		if (!pid)
 		{

@@ -57,7 +57,7 @@ char ***triple_copy_add(char ***triple)
 	i = 0;
 	while(triple[i])
 		i++;
-	result = ft_calloc(sizeof(char **), i + 2);
+	result = ft_calloc(sizeof(char **), i + 1);
 	i = 0;
 	while(triple[i])
 	{
@@ -79,16 +79,13 @@ char	***copy_split_environment(char **envp)
 		i++;
 	p = ft_calloc(sizeof(char **), i + 1);
 	i = 0;
-	while (envp && envp[i])
+	while (envp && *envp)
 	{
-		if(!ft_strncmp(envp[i], "_=", 2))
-			i++;
-		else
-		{
-			p[i] = ft_split(envp[i], '=');
-			i++;
-		}
-	}	
+		if(ft_strncmp(*envp, "_=", 2))
+			p[i++] = ft_split(*envp, '=');
+	printf("%s\n%p => %p + %p + %p\n",*envp, p[i - 1], p[i - 1][0], p[i-1][1], p[i-1][2]);
+		envp++;
+	}
 	return (p);
 }
 

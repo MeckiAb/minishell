@@ -94,6 +94,6 @@ int		run_exit(t_mini *mini, t_command *cmd);
 int		run_unset(t_mini *mini, t_command *cmd);
 int		run_cd(t_mini *mini, t_command *cmd);
 
-
+void	handle_sigint_main(int sig);
 
 #endif
