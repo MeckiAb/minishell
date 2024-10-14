@@ -80,7 +80,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 	}
 	if (access(path_cmd, X_OK) == 0)
 	{
-			signal(SIGINT, handle_sigint_execve);
+		signal(SIGINT, handle_sigint_execve);
 		pid = fork();
 		if (!pid)
 		{

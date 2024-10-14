@@ -90,10 +90,7 @@ static int heredoc(t_mini *mini, char *lmt, int xpand)
 		if (!aux_str || !*aux_str)
 			break ;
 		if (!ft_strncmp(aux_str, lmt, size + 1))
-		{
-			free(aux_str);
 			break ;
-		}
 		if (xpand)
 			aux_str = expand_heredoc_dollar(mini, &aux_str);
 		write(fd[1], aux_str, ft_strlen(aux_str));

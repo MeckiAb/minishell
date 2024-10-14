@@ -17,10 +17,12 @@ char	**get_full_path(char **envp)
 	while (envp && *envp && ft_strncmp(*envp, "PATH=", 5))
 		envp++;
 	if (!envp || !*envp)
-		return (ft_split("/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:\
+		return (ft_split("", ' '));
+	return(ft_split(*envp + 5, ':'));
+/* 		return (ft_split("/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:\
 			/sbin:/bin:.", ':'));
 	return (add_str_to_array(".", ft_split(*envp + 5, ':')));
-}
+ */}
 
 static char	*get_env_item(char **envp, char *item)
 {
@@ -82,8 +84,14 @@ char	***copy_split_environment(char **envp)
 	while (envp && *envp)
 	{
 		if(ft_strncmp(*envp, "_=", 2))
-			p[i++] = ft_split(*envp, '=');
-	printf("%s\n%p => %p + %p + %p\n",*envp, p[i - 1], p[i - 1][0], p[i-1][1], p[i-1][2]);
+		{
+			// p[i++] = ft_split(*envp, '=');
+			p[i] = ft_calloc(sizeof(char *), 3);
+			p[i][0] = ft_substr(*envp, 0, len_before_equal(*envp));
+			p[i][1] = ft_substr(*envp,
+				len_before_equal(*envp) + 1, ft_strlen(*envp));
+			i++;
+		}
 		envp++;
 	}
 	return (p);
