@@ -12,6 +12,29 @@
 
 #include "minishell.h"
 
+
+void	print_cmd(t_mini *mini)
+{
+	int	i = 0;
+	t_command	*cmd;
+	t_tkn	*tkn;
+
+	tkn = mini->tkn_list;
+	while (tkn)
+	{
+		printf("%s\n", tkn->tkn);
+		tkn = tkn->next;
+	}
+	cmd = mini->cmd_list;
+	printf("CMD : %p\n", cmd);
+	while (cmd->arg_array[i])
+		printf("ARG_ARRAY[i] : %s\n",cmd->arg_array[i++]);
+	printf("PATH : %s\n", cmd->path);
+	printf("INFILE : %d - OUTFILE : %d\n", cmd->infile, cmd->outfile);
+	printf("PID : %d - EXIT STATUS : %d\n", cmd->pid, cmd->exit_status);
+	printf("NEXT : %p\n", cmd->next);
+}
+
 int	run_pwd(t_mini *mini, t_command *cmd)
 {
 	char	*pwd;
@@ -38,6 +61,7 @@ int run_echo(t_mini *mini, t_command *cmd)
 	int i;
 
 	apply_redir(cmd);
+	print_cmd(mini);
 	i = 0;
 	n_flag = 0;
 	if (cmd->arg_array[1] && cmd->arg_array[1][i++] == '-')
@@ -258,13 +282,9 @@ void	alpha_export(char ***env)
 int	run_export(t_mini *mini, t_command *cmd)
 {
 	int		i;
-	int		c;
 	int		flag;
-	char	**temp;
 
-	temp = NULL;
 	flag = 0;
-	c = 1;
 	i = 1;
 	if (cmd->arg_array && !cmd->arg_array[1])
 		cmd->exit_status = only_export(mini, cmd);

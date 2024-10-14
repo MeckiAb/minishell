@@ -39,16 +39,46 @@ static char	*get_env_item(char **envp, char *item)
 	return (ft_strdup(*envp + ft_strlen(item) + 1));
 }
 
-char	**copy_environmet(char **envp)
+char	**copy_environment(char **envp)
 {
-	char	**p;
-	int		i;
+	char		**p;
+	int			i;
 
 	i = 0;
 	p = ft_calloc(sizeof(char *), 1);
 	while (envp && envp[i])
-		p = add_str_to_array(envp[i++], p);		
+	{
+		if (ft_strncmp(envp[i], "_=", 2))
+			p = add_str_to_array(envp[i], p);
+		i++;
+	}
+	p = add_str_to_array("_=/usr/bin/env", p);
 	return (p);
+}
+
+void	init_environment(t_mini *mini, char **envp)
+{
+	t_command	*cmd;
+	char		*variable;
+	char		*aux;
+
+	cmd = ft_calloc(sizeof(t_command), 1);
+	variable = get_env_item(envp, "SHLVL");
+	aux = ft_itoa(ft_atoi(variable) + 1);
+	variable = ft_strjoin("export SHLVL=", aux);
+	cmd->arg_array = ft_split(variable, ' ');
+	run_export(mini, cmd);
+	free(aux);
+	free(variable);
+	free_split(cmd->arg_array);
+	variable = getcwd(NULL, 0);
+	aux = ft_strjoin("export PWD=", variable);
+	cmd->arg_array = ft_split(aux, ' ');
+	run_export(mini, cmd);
+	free_split(cmd->arg_array);
+	free(aux);
+	free(variable);
+	free(cmd);
 }
 
 char ***triple_copy_add(char ***triple)
@@ -63,7 +93,7 @@ char ***triple_copy_add(char ***triple)
 	i = 0;
 	while(triple[i])
 	{
-		result[i] = copy_environmet(triple[i]);
+		result[i] = copy_environment(triple[i]);
 		i++;
 	}
 	free_dictionary(triple);
@@ -112,7 +142,7 @@ void	insert_variable_value(t_mini *mini, char **str)
 	else
 	{
 		j = 0;
-		identifier = ft_calloc(sizeof(char), ft_strlen(*str));
+		identifier = ft_calloc(sizeof(char), ft_strlen(*str) + 1);
 		while (**str == '_' || ft_isalnum(**str))
 			identifier[j++] = *(*str)++;
 		value = get_env_item(mini->envp, identifier);

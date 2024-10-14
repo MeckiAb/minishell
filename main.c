@@ -22,7 +22,7 @@ static t_mini	*init_shell(char **argv, char **envp)
 	if (!mini)
 		return (NULL);
 	mini->argv = argv;
-	mini->envp = copy_environmet(envp);
+	mini->envp = copy_environment(envp);
 	mini->envp_dictionary = copy_split_environment(mini->envp);
 	mini->path = get_full_path(mini->envp);
 	if (!mini->path)
@@ -76,6 +76,7 @@ int	main(int argc, char **argv, char **envp)
 	t_mini		*mini;
 
 	mini = init_shell(argv, envp);
+	init_environment(mini, envp);
 	if (argc != 1 || !mini)
 		return (1);
 	signal(SIGQUIT, SIG_IGN);
