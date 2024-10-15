@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/09 13:28:27 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/15 23:46:29 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 			apply_redir(cmd);
 			execve(path_cmd, cmd->arg_array, mini->envp);
 			perror("execve");
-			cmd->exit_status = 127;
+			exit(127);
 		}
 		else
 			cmd->pid = pid;
@@ -136,7 +136,10 @@ static void	wait_process(t_mini *mini)
 	while (cmd)
 	{
 		if (cmd->pid != -1)
+		{
+			signal(SIGINT, handle_sigint_fork);
 			waitpid(cmd->pid, &(cmd->exit_status), 0);
+		}
 		mini->status = WEXITSTATUS(cmd->exit_status);
 		cmd = cmd->next;
 	}

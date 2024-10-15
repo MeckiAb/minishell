@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/08 14:00:30 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/15 23:43:06 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,22 +61,19 @@ void	free_shell(t_mini *mini)
 	free(mini);
 }
 
-void handle_sigint_main(int sig)
+void	handle_sigint_fork(int sig)
 {
 	(void)sig;
-	if (!global_signal)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	else if (global_signal == 1)
-		printf("\n");
-	else
-	{
-		global_signal = 0;
-	}
+	printf("\n");
+}
+
+void	handle_sigint_main(int sig)
+{
+	(void)sig;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -89,10 +86,9 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1 || !mini)
 		return (1);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, handle_sigint_main);
 	while (1)
 	{
-		global_signal = 0;
+		signal(SIGINT, handle_sigint_main);
 		str = readline("MiniShell :\\>");
 		if (!str)
 		{

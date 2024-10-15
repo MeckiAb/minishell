@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/09 13:16:36 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/15 23:45:38 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,6 @@ int		run_unset(t_mini *mini, t_command *cmd);
 int		run_cd(t_mini *mini, t_command *cmd);
 
 void	handle_sigint_main(int sig);
+void	handle_sigint_fork(int sig);
 
 #endif
