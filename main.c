@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-//int	global_signal;
+int	global_signal;
 
 static t_mini	*init_shell(char **argv, char **envp)
 {
@@ -64,10 +64,19 @@ void	free_shell(t_mini *mini)
 void handle_sigint_main(int sig)
 {
 	(void)sig;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (!global_signal)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	else if (global_signal == 1)
+		printf("\n");
+	else
+	{
+		global_signal = 0;
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -80,9 +89,10 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1 || !mini)
 		return (1);
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, handle_sigint_main);
 	while (1)
 	{
-		signal(SIGINT, handle_sigint_main);
+		global_signal = 0;
 		str = readline("MiniShell :\\>");
 		if (!str)
 		{

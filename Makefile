@@ -35,7 +35,7 @@ $(LIBFT):
 	make -C libft bonus
 
 $(NAME) : $(LIBFT) $(OBJ)
-	$(CC) $(OBJ) $(LIBFT) -lreadline -o $@
+	$(CC) $(OBJ) $(LIBFT) -lreadline -ltermcap -o $@
 
 clean :
 	rm $(OBJ)

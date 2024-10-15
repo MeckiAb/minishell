@@ -61,7 +61,6 @@ int run_echo(t_mini *mini, t_command *cmd)
 	int i;
 
 	apply_redir(cmd);
-	print_cmd(mini);
 	i = 0;
 	n_flag = 0;
 	if (cmd->arg_array[1] && cmd->arg_array[1][i++] == '-')

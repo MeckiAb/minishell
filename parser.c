@@ -62,17 +62,16 @@ static char	*expand_heredoc_dollar(t_mini *mini, char **str)
 	return(tmp);
 }
 
-void	handle_sigint_heredoc(int sig)
+/*  void	handle_sigint_heredoc(int sig)
 {
 	(void)sig;
-	printf("-- Here-document cancelled. Press Enter to continue --");
-	rl_on_new_line();
-	printf("\n");
-	//rl_replace_line("", 0);
-	//rl_redisplay();
-	signal(SIGINT, handle_sigint_main);
 
-}
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	//signal(SIGINT, handle_sigint_main);
+} */
 
 static int heredoc(t_mini *mini, char *lmt, int xpand)
 {
@@ -85,9 +84,8 @@ static int heredoc(t_mini *mini, char *lmt, int xpand)
 		return (-1);
 	while(1)
 	{
-		signal(SIGINT, handle_sigint_heredoc);
 		aux_str = readline("heredoc>");
-		if (!aux_str || !*aux_str)
+		if (!aux_str)
 			break ;
 		if (!ft_strncmp(aux_str, lmt, size + 1))
 			break ;
@@ -102,14 +100,37 @@ static int heredoc(t_mini *mini, char *lmt, int xpand)
 	return (fd[0]);
 }
 
+int	heredoc_launcher(t_mini *mini, char *lmt, int xpand)
+{
+	int	pid;
+	int	status;
+	int result;
+
+	status = 0;
+	result = 0;
+	//signal(SIGINT, handle_sigint_heredoc);
+	global_signal = 2;
+	pid = fork();
+	if (!pid)
+	{
+		result = heredoc(mini, lmt, xpand);
+	}
+	else
+	{
+		wait(&status);
+	//	signal(SIGINT, handle_sigint_main);
+	}
+	return (result);
+}
+
 static void	handle_redir(t_mini *mini, t_command *cmd, char *redir, char *filename)
 {
 	int	file_fd;
 	
 	if (!ft_strncmp(redir, "<<", 3))
-		file_fd = heredoc(mini, filename, 0);
+		file_fd = heredoc_launcher(mini, filename, 0);
 	else if (!ft_strncmp(redir, "<$", 3))
-		file_fd = heredoc(mini, filename, 1);
+		file_fd = heredoc_launcher(mini, filename, 1);
 	else if (!ft_strncmp(redir, "<", 2))
 		file_fd = open(filename, O_RDONLY);
 	else if (!ft_strncmp(redir, ">>", 3))

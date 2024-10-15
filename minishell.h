@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <signal.h>
+# include <term.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
