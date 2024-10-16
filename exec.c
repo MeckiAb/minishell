@@ -80,15 +80,13 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 	}
 	if (access(path_cmd, X_OK) == 0)
 	{
-		//signal(SIGINT, handle_sigint_execve);
-		global_signal = 1;
 		pid = fork();
 		if (!pid)
 		{
 			apply_redir(cmd);
 			execve(path_cmd, cmd->arg_array, mini->envp);
 			perror("execve");
-			exit(127);
+			exit(0);
 		}
 		else
 			cmd->pid = pid;
@@ -97,7 +95,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 	{
 		if (cmd->arg_array && cmd->arg_array[0] && !aux[i])
 		{
-			cmd->exit_status = 127;
+			cmd->exit_status = 127 << 8;
 			print_errors(cmd->arg_array[0], ": command not found", "\n");
 		}
 	}
@@ -140,7 +138,13 @@ static void	wait_process(t_mini *mini)
 			signal(SIGINT, handle_sigint_fork);
 			waitpid(cmd->pid, &(cmd->exit_status), 0);
 		}
-		mini->status = WEXITSTATUS(cmd->exit_status);
+		if (global_signal)
+		{
+			mini->status = 130;
+			global_signal = 0;
+		}
+		else
+			mini->status = WEXITSTATUS(cmd->exit_status);
 		cmd = cmd->next;
 	}
 }

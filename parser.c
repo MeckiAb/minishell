@@ -176,6 +176,7 @@ void	parser(t_mini *mini)
 			p = p->next;
 			if (global_signal)
 			{
+				mini->status = 130;
 				free_commands_and_tokens(mini);
 				global_signal = 0;
 				return ;

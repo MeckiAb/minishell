@@ -131,7 +131,10 @@ int	run_exit(t_mini *mini, t_command *cmd)
 {
 	apply_redir(cmd);
 	if (!cmd->arg_array[1])
+	{
+		printf("exit\n");
 		exit(0);
+	}
 	if (cmd->arg_array[1] && check_exit_argument(cmd->arg_array[1]) == -1)
 	{
 		print_errors("exit\nminishell: exit: ", cmd->arg_array[1],
