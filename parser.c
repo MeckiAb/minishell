@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:28:37 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/15 23:53:07 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/16 05:54:15 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,23 +93,24 @@ int	heredoc_launcher(t_mini *mini, char *lmt, int xpand)
 {
 	int	pid;
 	int	status;
-	int result;
+	int *result;
 
 	status = 0;
-	result = 0;
+	result = malloc(sizeof(int));
+	*result = -1;
 	pid = fork();
 	if (!pid)
 	{
 		signal(SIGINT, SIG_DFL);
-		result = heredoc(mini, lmt, xpand);
+		*result = heredoc(mini, lmt, xpand);
 		exit(0);
 	}
 	else
 	{
 		signal(SIGINT, handle_sigint_fork);
-		wait(&status);
+		waitpid(pid, &status, 0);
 	}
-	return (result);
+	return (*result);
 }
 
 static void	handle_redir(t_mini *mini, t_command *cmd, char *redir, char *filename)
@@ -126,7 +127,7 @@ static void	handle_redir(t_mini *mini, t_command *cmd, char *redir, char *filena
 		file_fd = open(filename, O_WRONLY | O_APPEND | O_CREAT, 0664);
 	else
 		file_fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 0664);
-	if (file_fd == -1)
+	if (file_fd == -1 && !global_signal)
 		perror("file error");
 	if (*redir == '<')
 		cmd->infile = file_fd;
@@ -173,6 +174,12 @@ void	parser(t_mini *mini)
 			else if (p->tkn_type == 2)
 				handle_name(p->tkn, cmd);
 			p = p->next;
+			if (global_signal)
+			{
+				free_commands_and_tokens(mini);
+				global_signal = 0;
+				return ;
+			}
 		}
 		if (p && p->tkn_type == 0)
 		{

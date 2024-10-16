@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/15 23:43:06 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/16 05:30:03 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	handle_sigint_fork(int sig)
 {
 	(void)sig;
 	printf("\n");
+	global_signal = 1;
 }
 
 void	handle_sigint_main(int sig)
