@@ -29,8 +29,8 @@ static t_command	*new_command(void)
 		exit(EXIT_FAILURE);
 	}
 	cmd->path = NULL;
-	cmd->infile = -1;
-	cmd->outfile = -1;
+	cmd->infile = -2;
+	cmd->outfile = -2;
 	cmd->pid = -1;
 	cmd->exit_status = -1;
 	cmd->next = NULL;
@@ -128,7 +128,10 @@ static void	handle_redir(t_mini *mini, t_command *cmd, char *redir, char *filena
 	else
 		file_fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 0664);
 	if (file_fd == -1 && !global_signal)
-		perror("file error");
+	{
+		print_errors("MiniShell: ", filename, ": ");
+		print_errors(strerror(errno), "\n", "");
+	}
 	if (*redir == '<')
 		cmd->infile = file_fd;
 	else

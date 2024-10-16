@@ -34,12 +34,12 @@ char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
 
 void	apply_redir(t_command *cmd)
 {
-	if (cmd->infile != -1)
+	if (cmd->infile != -2)
 	{
 		dup2(cmd->infile, STDIN_FILENO);
 		close(cmd->infile);
 	}
-	if (cmd->outfile != -1)
+	if (cmd->outfile != -2)
 	{
 		dup2(cmd->outfile, STDOUT_FILENO);
 		close(cmd->outfile);
@@ -48,21 +48,12 @@ void	apply_redir(t_command *cmd)
 
 void	revert_redir(t_mini *mini, t_command *cmd)
 {
-	if (cmd->infile != -1)
+	if (cmd->infile < 0)
 		dup2(mini->mini_in, STDIN_FILENO);
-	if (cmd->outfile != -1)
+	if (cmd->outfile < 0)
 		dup2(mini->mini_out, STDOUT_FILENO);
-	if (!access(".heredoctmp", F_OK))
-		unlink(".heredoctmp");
 }
 
-/* void	handle_sigint_execve(int sig)
-{
-	(void)sig;
-	printf("\n");
-	signal(SIGINT, handle_sigint_main);
-}
- */
 void	run_execve_command(t_mini *mini, t_command *cmd)
 {
 	char	**aux;
@@ -84,8 +75,10 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 		if (!pid)
 		{
 			apply_redir(cmd);
+			if (cmd->infile == -1 || cmd->outfile == -1)
+				exit(1);
 			execve(path_cmd, cmd->arg_array, mini->envp);
-			perror("execve");
+			perror(cmd->arg_array[0]);
 			exit(0);
 		}
 		else
