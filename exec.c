@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 20:26:54 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 00:37:21 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd, int fd[2])
 	aux = get_full_path(mini->envp);
 	i = 0;
 	path_cmd = ft_strdup(cmd->arg_array[0]);
-	while(aux && aux[i] && path_cmd && access(path_cmd, X_OK) != 0)
+	while (aux && aux[i] && path_cmd && access(path_cmd, X_OK) != 0)
 	{
 		free(path_cmd);
 		path_cmd = triple_strjoin(aux[i++], "/", cmd->arg_array[0]);
@@ -136,11 +136,11 @@ static void	wait_process(t_mini *mini)
 		}
 		else
 			mini->status = WEXITSTATUS(cmd->exit_status);
-		if (global_signal)
+		if (g_signal)
 			mini->status = 130;
 		cmd = cmd->next;
 	}
-	global_signal = 0;
+	g_signal = 0;
 }
 
 void	exec_line(t_mini *mini)
@@ -168,6 +168,3 @@ void	exec_line(t_mini *mini)
 	}
 	wait_process(mini);
 }
-
-
-

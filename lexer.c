@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/09 11:25:54 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 23:47:59 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	insert_token(t_mini *mini, char *str, int tkn_type)
 static void	insert_control(t_mini *mini, char **str)
 {
 	int	i;
-	
+
 	if (**str == '<' && *(*str + 1) == '<' && ++*str && ++*str)
 	{
 		i = 0;
@@ -87,7 +87,7 @@ static void	insert_word(t_mini *mini, char **str)
 	quote = 0;
 	tmp = ft_calloc(sizeof(char), 4096);
 	while (**str && (quote || !(**str == ' ' || **str == '\t' || **str == '\n'
-		|| **str == '<' || **str == '>' || **str == '|')))
+			|| **str == '<' || **str == '>' || **str == '|')))
 	{
 		if ((**str == '\'' && quote <= 0) || (**str == '\"' && quote >= 0))
 			quote = select_quote(quote, *(*str)++);
@@ -108,7 +108,7 @@ static void	insert_word(t_mini *mini, char **str)
 void	lexer(t_mini *mini, char *str)
 {
 	char	*tkn;
-	
+
 	while (str && *str)
 	{
 		while (*str == ' ' || *str == '\t' || *str == '\n')

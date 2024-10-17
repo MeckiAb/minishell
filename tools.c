@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 18:24:13 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 23:16:22 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,20 @@ void	free_split(char **str)
 		free(str[i++]);
 	if (str)
 		free(str);
+}
+
+void	free_dictionary(char ***dict)
+{
+	char	***p;
+
+	p = dict;
+	while (p && *p)
+	{
+		free((*p)[0]);
+		free((*p)[1]);
+		free(*p++);
+	}
+	free(dict);
 }
 
 void	free_commands_and_tokens(t_mini *mini)

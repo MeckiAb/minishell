@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 18:17:22 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 00:29:32 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
-extern int	global_signal;
+extern int	g_signal;
 
 typedef struct s_tkn
 {
@@ -49,7 +49,7 @@ typedef struct s_mini
 	char		**argv;
 	char		**envp;
 	char		***envp_dictionary;
-	char		**path;
+//	char		**path;
 	int			status;
 	int			mini_in;
 	int			mini_out;
@@ -60,6 +60,10 @@ typedef struct s_mini
 
 
 char	**get_full_path(char **envp);
+t_mini	*init_shell(char **argv, char **envp);
+void	free_shell(t_mini *mini);
+char	*get_env_item(char **envp, char *item);
+int		heredoc_launcher(t_mini *mini, char *lmt, int xpand);
 
 void	free_split(char **str);
 void	free_list(t_tkn **tkn_list);
@@ -80,7 +84,7 @@ void	exec_line(t_mini *mini);
 void	insert_variable_value(t_mini *mini, char **str);
 char	*check_syntax(t_mini *mini);
 char	**add_str_to_array(char *str, char **list);
-void	init_environment(t_mini *mini, char **envp);
+//void	init_environment(t_mini *mini, char **envp);
 char	**copy_environment(char **envp);
 char	***copy_split_environment(char **envp);
 void	apply_redir(t_command *cmd);
