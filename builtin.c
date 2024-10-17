@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 11:42:34 by jormoral          #+#    #+#             */
-/*   Updated: 2024/10/08 14:19:58 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 14:19:09 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ int	run_exit(t_mini *mini, t_command *cmd)
 	exit(check_exit_argument(cmd->arg_array[1]));
 	revert_redir(mini, cmd);
 }
-
+/* 
 int	check_export(char *str, int *flag)
 {
 	int	i;
@@ -168,7 +168,7 @@ int	check_export(char *str, int *flag)
 		*flag = 1;
 	return (1);
 }
-
+ */
 int	search_env(t_mini *mini, char *str)
 {
 	int	i;
@@ -182,7 +182,7 @@ int	search_env(t_mini *mini, char *str)
 	}
 	return (i);
 }
-
+/* 
 void ok_replace(t_mini *mini, t_command *cmd, int i, int na)
 {
 	int		i_env;
@@ -288,7 +288,7 @@ int	run_export(t_mini *mini, t_command *cmd)
 
 	flag = 0;
 	i = 1;
-	if (cmd->arg_array && !cmd->arg_array[1])
+	if (!cmd->arg_array[1])
 		cmd->exit_status = only_export(mini, cmd);
 	while (cmd->arg_array[i])
 	{
@@ -304,3 +304,4 @@ int	run_export(t_mini *mini, t_command *cmd)
 	}
 	return (cmd->exit_status);
 }
+ */

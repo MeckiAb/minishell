@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/15 23:45:38 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 14:16:28 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,10 @@ void	free_commands_and_tokens(t_mini *mini);
 void	free_dictionary(char ***dict);
 char	*join_before_line(char *prefix, char *line);
 unsigned long long	ft_atoll(const char *str);
+char	***add_elem_to_dict(char **str, char ***list);
+char	*triple_strjoin(char const *s1, char const *s2, char const *s3);
+
+
 
 
 void	lexer(t_mini *mini, char *str);
@@ -86,12 +90,12 @@ char	***triple_copy_add(char ***triple);
 void	print_errors(char *s1, char *s2, char *s3);
 int 	len_before_equal(char *s);
 int		search_env(t_mini *mini, char *str);
+void	dict_to_envp(t_mini *mini);
+
 
 int 	run_echo(t_mini *mini, t_command *cmd);
 int		run_pwd(t_mini *mini, t_command *cmd);
 int		run_export(t_mini *mini, t_command *cmd);
-int		only_export(t_mini *mini, t_command *cmd);
-void	alpha_export(char ***env);
 int		run_env(t_mini *mini, t_command *cmd);
 int		run_exit(t_mini *mini, t_command *cmd);
 int		run_unset(t_mini *mini, t_command *cmd);

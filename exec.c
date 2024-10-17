@@ -130,16 +130,15 @@ static void	wait_process(t_mini *mini)
 		{
 			signal(SIGINT, handle_sigint_fork);
 			waitpid(cmd->pid, &(cmd->exit_status), 0);
-		}
-		if (global_signal)
-		{
-			mini->status = 130;
-			global_signal = 0;
+			mini->status = WEXITSTATUS(cmd->exit_status);
 		}
 		else
 			mini->status = WEXITSTATUS(cmd->exit_status);
+		if (global_signal)
+			mini->status = 130;
 		cmd = cmd->next;
 	}
+	global_signal = 0;
 }
 
 void	exec_line(t_mini *mini)

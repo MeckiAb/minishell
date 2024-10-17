@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/09 13:37:16 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 13:12:43 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,20 @@ char	**add_str_to_array(char *str, char **list)
 	size += 1;
 	r = ft_realloc(list, sizeof(char *) * size, sizeof(char *) * (size + 1));
 	r[size - 1] = ft_strdup(str);
+	return (r);
+}
+
+char	***add_elem_to_dict(char **str, char ***list)
+{
+	int		size;
+	char	***r;
+	
+	size = 0;
+	while (list && list[size])
+		size++;
+	size += 1;
+	r = ft_realloc(list, sizeof(char **) * size, sizeof(char **) * (size + 1));
+	r[size - 1] = str;
 	return (r);
 }
 

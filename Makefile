@@ -6,7 +6,7 @@
 #    By: labderra <labderra@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 12:03:18 by labderra          #+#    #+#              #
-#    Updated: 2024/10/09 13:20:57 by labderra         ###   ########.fr        #
+#    Updated: 2024/10/17 14:14:45 by labderra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ tools.c \
 environment.c \
 builtin.c \
 unset.c \
-cd.c
+cd.c \
+export.c
 
 OBJ = $(SRC:.c=.o)
 

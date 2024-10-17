@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/09 11:26:11 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 14:08:25 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,26 @@ char	**copy_environment(char **envp)
 	}
 	p = add_str_to_array("_=/usr/bin/env", p);
 	return (p);
+}
+
+void	dict_to_envp(t_mini *mini)
+{
+	int	i;
+	char	**new;
+
+	i = 0;
+	while (mini->envp_dictionary && mini->envp_dictionary[i])
+		i++;
+	new = ft_calloc(sizeof(char *), i + 2);
+	i = 0;
+	while (mini->envp_dictionary && mini->envp_dictionary[i])
+	{	new[i] = triple_strjoin(mini->envp_dictionary[i][0],
+			"=", mini->envp_dictionary[i][1]);
+		i++;
+	}
+	new[i] = ft_strdup("_=/usr/bin/env");
+	free_split(mini->envp);
+	mini->envp = new;
 }
 
 void	init_environment(t_mini *mini, char **envp)
@@ -115,7 +135,6 @@ char	***copy_split_environment(char **envp)
 	{
 		if(ft_strncmp(*envp, "_=", 2))
 		{
-			// p[i++] = ft_split(*envp, '=');
 			p[i] = ft_calloc(sizeof(char *), 3);
 			p[i][0] = ft_substr(*envp, 0, len_before_equal(*envp));
 			p[i][1] = ft_substr(*envp,
