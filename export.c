@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 12:42:56 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 14:28:46 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:33:35 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	print_export(t_mini *mini, t_command *cmd)
 	sort_export(env);
 	while (env[i])
 	{
-		if (!env[i][1])
+		if (!env[i][1] || !*env[i][1])
 			printf("declare -x %s\n", env[i][0]);
 		else
 			printf("declare -x %s=\"%s\"\n", env[i][0], env[i][1]);
@@ -78,6 +78,7 @@ static int	check_export(char *str)
 int	run_export(t_mini *mini, t_command *cmd)
 {
 	int		i;
+	int		j;
 	int		flag;
 	char	***aux;
 	char	**new;
@@ -97,11 +98,14 @@ int	run_export(t_mini *mini, t_command *cmd)
 			printf(" ´%s': not a valid identifier\n", cmd->arg_array[i]);
 			return (1);
 		}
+		j = 0;
+		while (mini->envp_dictionary && mini->envp_dictionary[j])
+			j++;
+		mini->envp_dictionary = ft_realloc(mini->envp_dictionary, sizeof(char ***) * (j + 1) , sizeof(char ***) * (j + 2));
 		aux = mini->envp_dictionary;
-		printf("%d\n",flag);
 		while (aux && *aux && ft_strncmp(cmd->arg_array[i], (*aux)[0], ft_strlen((*aux)[0])))
 			aux++;
-		if (!*aux && !flag)
+		if (aux && !*aux && !flag)
 		{
 			new = ft_calloc(sizeof(char *), 3);
 			new[0] = ft_strdup(cmd->arg_array[i]);
@@ -110,12 +114,11 @@ int	run_export(t_mini *mini, t_command *cmd)
 		}
 		if (flag)
 		{
-			if (*aux)
+			if (aux && *aux)
 				free_split(*aux);
-			new = ft_calloc(sizeof(char *), 3);
-			new[0] = ft_strdup(cmd->arg_array[i]);
-			new[1] = ft_strdup("\0");
-			*aux = new;
+			*aux = ft_calloc(sizeof(char *), 3);
+			(*aux)[0] = ft_substr(cmd->arg_array[i], 0, len_before_equal(cmd->arg_array[i]));
+			(*aux)[1] = ft_substr(cmd->arg_array[i], len_before_equal(cmd->arg_array[i]) + 1, ft_strlen(cmd->arg_array[i]));
 		}
 		dict_to_envp(mini);
 		i++;

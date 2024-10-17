@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 13:12:43 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:24:13 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	free_commands_and_tokens(t_mini *mini)
 	}
 }
 
-static void	*ft_realloc(void *p, int old_size, int new_size)
+void	*ft_realloc(void *p, int old_size, int new_size)
 {
 	void	*r;
 	
@@ -90,7 +90,7 @@ static void	*ft_realloc(void *p, int old_size, int new_size)
 		ft_memmove(r, p, old_size);
 	else if (p && old_size > new_size)
 		ft_memmove(r, p, new_size);
-	return (free (p), r);	
+	return (free(p), r);	
 }
 
 char	**add_str_to_array(char *str, char **list)

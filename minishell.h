@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 14:16:28 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:17:22 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	*join_before_line(char *prefix, char *line);
 unsigned long long	ft_atoll(const char *str);
 char	***add_elem_to_dict(char **str, char ***list);
 char	*triple_strjoin(char const *s1, char const *s2, char const *s3);
-
+void	*ft_realloc(void *p, int old_size, int new_size);
 
 
 

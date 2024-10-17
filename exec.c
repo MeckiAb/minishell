@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/15 23:46:29 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 20:26:54 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	revert_redir(t_mini *mini, t_command *cmd)
 		dup2(mini->mini_out, STDOUT_FILENO);
 }
 
-void	run_execve_command(t_mini *mini, t_command *cmd)
+void	run_execve_command(t_mini *mini, t_command *cmd, int fd[2])
 {
 	char	**aux;
 	char	*path_cmd;
@@ -77,7 +77,9 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 			apply_redir(cmd);
 			if (cmd->infile == -1 || cmd->outfile == -1)
 				exit(1);
+			close(fd[0]);
 			execve(path_cmd, cmd->arg_array, mini->envp);
+			revert_redir(mini, cmd);
 			perror(cmd->arg_array[0]);
 			exit(0);
 		}
@@ -97,7 +99,7 @@ void	run_execve_command(t_mini *mini, t_command *cmd)
 	revert_redir(mini, cmd);
 }
 
-void	run_command(t_mini *mini, t_command *cmd)
+void	run_command(t_mini *mini, t_command *cmd, int fd[2])
 {
 	if (!cmd->arg_array[0])
 		cmd->arg_array[0] = ft_strdup("");
@@ -116,7 +118,7 @@ void	run_command(t_mini *mini, t_command *cmd)
 	else if (!ft_strncmp(cmd->arg_array[0], "exit", 5))
 		cmd->exit_status = run_exit(mini, cmd);
 	else
-		run_execve_command(mini, cmd);
+		run_execve_command(mini, cmd, fd);
 }
 
 static void	wait_process(t_mini *mini)
@@ -153,7 +155,7 @@ void	exec_line(t_mini *mini)
 			perror("pipe");
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
-		run_command(mini, cmd);
+		run_command(mini, cmd, fd);
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
 		cmd = cmd->next;
@@ -161,7 +163,7 @@ void	exec_line(t_mini *mini)
 	if (cmd)
 	{
 		dup2(mini->mini_out, STDOUT_FILENO);
-		run_command(mini, cmd);
+		run_command(mini, cmd, fd);
 		dup2(mini->mini_in, STDIN_FILENO);
 	}
 	wait_process(mini);

@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 14:08:25 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:53:33 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ char	**copy_environment(char **envp)
 
 void	dict_to_envp(t_mini *mini)
 {
-	int	i;
+	int		i;
+	int		j;
 	char	**new;
 
 	i = 0;
@@ -66,12 +67,18 @@ void	dict_to_envp(t_mini *mini)
 		i++;
 	new = ft_calloc(sizeof(char *), i + 2);
 	i = 0;
+	j = 0;
 	while (mini->envp_dictionary && mini->envp_dictionary[i])
-	{	new[i] = triple_strjoin(mini->envp_dictionary[i][0],
-			"=", mini->envp_dictionary[i][1]);
+	{
+		if (*mini->envp_dictionary[i][1])
+		{
+			new[j] = triple_strjoin(mini->envp_dictionary[i][0],
+				"=", mini->envp_dictionary[i][1]);
+			j++;
+		}
 		i++;
 	}
-	new[i] = ft_strdup("_=/usr/bin/env");
+	new[j] = ft_strdup("_=/usr/bin/env");
 	free_split(mini->envp);
 	mini->envp = new;
 }
@@ -85,6 +92,7 @@ void	init_environment(t_mini *mini, char **envp)
 	cmd = ft_calloc(sizeof(t_command), 1);
 	variable = get_env_item(envp, "SHLVL");
 	aux = ft_itoa(ft_atoi(variable) + 1);
+	free(variable);
 	variable = ft_strjoin("export SHLVL=", aux);
 	cmd->arg_array = ft_split(variable, ' ');
 	run_export(mini, cmd);
