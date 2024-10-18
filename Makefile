@@ -6,7 +6,7 @@
 #    By: labderra <labderra@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 12:03:18 by labderra          #+#    #+#              #
-#    Updated: 2024/10/17 19:13:41 by labderra         ###   ########.fr        #
+#    Updated: 2024/10/18 14:48:49 by labderra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,10 +14,16 @@ NAME = minishell
 CC = clang -Wall -Werror -Wextra -g #-fsanitize=address
 LIBFT = libft/libft.a
 SRC = main.c \
+initialize.c \
+signals.c \
+free.c \
 lexer.c \
 parser.c \
+heredoc.c \
+redirections.c \
 exec.c \
-tools.c \
+tools1.c \
+tools2.c \
 environment.c \
 builtin.c \
 unset.c \

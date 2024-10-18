@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 18:53:33 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:52:59 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	**get_full_path(char **envp)
 	return (add_str_to_array(".", ft_split(*envp + 5, ':')));
  */}
 
-static char	*get_env_item(char **envp, char *item)
+char	*get_env_item(char **envp, char *item)
 {
 	char	*search;
 	
@@ -81,32 +81,6 @@ void	dict_to_envp(t_mini *mini)
 	new[j] = ft_strdup("_=/usr/bin/env");
 	free_split(mini->envp);
 	mini->envp = new;
-}
-
-void	init_environment(t_mini *mini, char **envp)
-{
-	t_command	*cmd;
-	char		*variable;
-	char		*aux;
-
-	cmd = ft_calloc(sizeof(t_command), 1);
-	variable = get_env_item(envp, "SHLVL");
-	aux = ft_itoa(ft_atoi(variable) + 1);
-	free(variable);
-	variable = ft_strjoin("export SHLVL=", aux);
-	cmd->arg_array = ft_split(variable, ' ');
-	run_export(mini, cmd);
-	free(aux);
-	free(variable);
-	free_split(cmd->arg_array);
-	variable = getcwd(NULL, 0);
-	aux = ft_strjoin("export PWD=", variable);
-	cmd->arg_array = ft_split(aux, ' ');
-	run_export(mini, cmd);
-	free_split(cmd->arg_array);
-	free(aux);
-	free(variable);
-	free(cmd);
 }
 
 char ***triple_copy_add(char ***triple)

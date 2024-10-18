@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/17 23:14:58 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 23:42:27 by labderra         ###   ########.fr       */
+/*   Created: 2024/10/18 13:42:09 by labderra          #+#    #+#             */
+/*   Updated: 2024/10/18 13:54:13 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,26 +49,11 @@ t_mini	*init_shell(char **argv, char **envp)
 	mini->envp_dictionary = copy_split_environment(envp);
 	mini->envp = NULL;
 	dict_to_envp(mini);
-/* 	mini->path = get_full_path(mini->envp);
-	if (!mini->path)
-		return (NULL); */
 	mini->status = 0;
 	mini->mini_in = dup(STDIN_FILENO);
 	mini->mini_out = dup(STDOUT_FILENO);
 	mini->tkn_list = NULL;
 	mini->cmd_list = NULL;
-	init_environment(mini, envp);
+	init_environment(mini, mini->envp);
 	return (mini);
-}
-
-void	free_shell(t_mini *mini)
-{
-	free_commands_and_tokens(mini);
-	rl_clear_history();
-//	free_split(mini->path);
-	free_split(mini->envp);
-	free_dictionary(mini->envp_dictionary);
-	close(mini->mini_in);
-	close(mini->mini_out);
-	free(mini);
 }

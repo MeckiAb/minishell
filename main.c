@@ -6,85 +6,13 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 13:30:47 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:50:35 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	global_signal;
-
-static t_mini	*init_shell(char **argv, char **envp)
-{
-	t_mini	*mini;
-
-	mini = malloc(sizeof(t_mini));
-	if (!mini)
-		return (NULL);
-	mini->argv = argv;
-	mini->envp = copy_environment(envp);
-	mini->envp_dictionary = copy_split_environment(mini->envp);
-	mini->path = get_full_path(mini->envp);
-	if (!mini->path)
-		return (NULL);
-	mini->status = 0;
-	mini->mini_in = dup(STDIN_FILENO);
-	mini->mini_out = dup(STDOUT_FILENO);
-	mini->tkn_list = NULL;
-	mini->cmd_list = NULL;
-	return (mini);
-}
-
-void	free_dictionary(char ***dict)
-{
-	char	***p;
-
-	p = dict;
-	while (p && *p)
-	{
-		free((*p)[0]);
-		free((*p)[1]);
-		free(*p++);
-	}
-	free(dict);
-}
-
-void	free_shell(t_mini *mini)
-{
-	free_commands_and_tokens(mini);
-	rl_clear_history();
-	free_split(mini->path);
-	free_split(mini->envp);
-	free_dictionary(mini->envp_dictionary);
-	close(mini->mini_in);
-	close(mini->mini_out);
-	free(mini);
-}
-
-void	handle_sigquit_fork(int sig)
-{
-	(void)sig;
-	printf("Quit (core dumped)\n");
-	global_signal = 2;
-	kill(0, SIGINT);
-}
-
-void	handle_sigint_fork(int sig)
-{
-	(void)sig;
-	printf("\n");
-	if (global_signal == 0)
-		global_signal = 1;
-}
-
-void	handle_sigint_main(int sig)
-{
-	(void)sig;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+int	g_signal;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -92,7 +20,6 @@ int	main(int argc, char **argv, char **envp)
 	t_mini		*mini;
 
 	mini = init_shell(argv, envp);
-	init_environment(mini, envp);
 	if (argc != 1 || !mini)
 		return (1);
 	while (1)

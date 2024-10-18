@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 23:49:23 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 00:29:46 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:46:15 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,13 @@ static char	*expand_heredoc_dollar(t_mini *mini, char **str)
 	return (tmp);
 }
 
-static int	heredoc(t_mini *mini, char *lmt, int xpand)
+static void	heredoc(t_mini *mini, char *lmt, int xpand, int fd[2])
 {
 	char	*aux_str;
-	int		fd[2];
 	int		size;
 
 	size = ft_strlen(lmt);
-	if (pipe(fd) == -1)
-		return (-1);
+	close(fd[0]);
 	while (1)
 	{
 		aux_str = readline("heredoc>");
@@ -61,23 +59,22 @@ static int	heredoc(t_mini *mini, char *lmt, int xpand)
 	}
 	free(aux_str);
 	close(fd[1]);
-	return (fd[0]);
 }
 
 int	heredoc_launcher(t_mini *mini, char *lmt, int xpand)
 {
 	int	pid;
 	int	status;
-	int	*result;
+	int	fd[2];
 
 	status = 0;
-	result = malloc(sizeof(int));
-	*result = -1;
+	if (pipe(fd) == -1)
+		return (-1);
 	pid = fork();
 	if (!pid)
 	{
 		signal(SIGINT, SIG_DFL);
-		*result = heredoc(mini, lmt, xpand);
+		heredoc(mini, lmt, xpand, fd);
 		exit(0);
 	}
 	else
@@ -85,5 +82,6 @@ int	heredoc_launcher(t_mini *mini, char *lmt, int xpand)
 		signal(SIGINT, handle_sigint_fork);
 		waitpid(pid, &status, 0);
 	}
-	return (*result);
+	close(fd[1]);
+	return (fd[0]);
 }

@@ -6,86 +6,49 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 13:16:10 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:41:45 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
+void	run_child_process(t_mini *mini, t_command *cmd,
+		char *path_cmd, int fd[2])
 {
-	size_t	i;
-	char	*p;
+	int	pid;
 
-	i = 0;
-	p = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)
-				+ ft_strlen(s3) + 1));
-	if (!p)
-		return (NULL);
-	while (*s1)
-		p[i++] = *s1++;
-	while (*s2)
-		p[i++] = *s2++;
-	while (*s3)
-		p[i++] = *s3++;
-	p[i] = '\0';
-	return (p);
-}
-
-void	apply_redir(t_command *cmd)
-{
-	if (cmd->infile != -2)
+	pid = fork();
+	if (!pid)
 	{
-		dup2(cmd->infile, STDIN_FILENO);
-		close(cmd->infile);
+		apply_redir(cmd);
+		if (cmd->infile == -1 || cmd->outfile == -1)
+			exit(1);
+		close(fd[0]);
+		execve(path_cmd, cmd->arg_array, mini->envp);
+		revert_redir(mini, cmd);
+		perror(cmd->arg_array[0]);
+		exit(0);
 	}
-	if (cmd->outfile != -2)
-	{
-		dup2(cmd->outfile, STDOUT_FILENO);
-		close(cmd->outfile);
-	}
-}
-
-void	revert_redir(t_mini *mini, t_command *cmd)
-{
-	if (cmd->infile < 0)
-		dup2(mini->mini_in, STDIN_FILENO);
-	if (cmd->outfile < 0)
-		dup2(mini->mini_out, STDOUT_FILENO);
+	else
+		cmd->pid = pid;
 }
 
 void	run_execve_command(t_mini *mini, t_command *cmd, int fd[2])
 {
 	char	**aux;
 	char	*path_cmd;
-	int		pid;
 	int		i;
 
 	aux = get_full_path(mini->envp);
 	i = 0;
 	path_cmd = ft_strdup(cmd->arg_array[0]);
-	while(aux && aux[i] && path_cmd && access(path_cmd, X_OK) != 0)
+	while (aux && aux[i] && path_cmd && access(path_cmd, X_OK) != 0)
 	{
 		free(path_cmd);
 		path_cmd = triple_strjoin(aux[i++], "/", cmd->arg_array[0]);
 	}
 	if (access(path_cmd, X_OK) == 0)
-	{
-		pid = fork();
-		if (!pid)
-		{
-			apply_redir(cmd);
-			if (cmd->infile == -1 || cmd->outfile == -1)
-				exit(1);
-			close(fd[0]);
-			execve(path_cmd, cmd->arg_array, mini->envp);
-			revert_redir(mini, cmd);
-			perror(cmd->arg_array[0]);
-			exit(0);
-		}
-		else
-			cmd->pid = pid;
-	}
+		run_child_process(mini, cmd, path_cmd, fd);
 	else
 	{
 		if (cmd->arg_array && cmd->arg_array[0] && !aux[i])
@@ -137,11 +100,11 @@ static void	wait_process(t_mini *mini)
 		}
 		else
 			mini->status = WEXITSTATUS(cmd->exit_status);
-		if (global_signal)
-			mini->status = 129 + global_signal;
+		if (g_signal)
+			mini->status = 128 + g_signal;
 		cmd = cmd->next;
 	}
-	global_signal = 0;
+	g_signal = 0;
 }
 
 void	exec_line(t_mini *mini)
@@ -169,6 +132,3 @@ void	exec_line(t_mini *mini)
 	}
 	wait_process(mini);
 }
-
-
-
