@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/17 18:17:22 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:02:27 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <sys/types.h>
 # include <signal.h>
 # include <term.h>
 # include <readline/readline.h>
@@ -103,5 +104,6 @@ int		run_cd(t_mini *mini, t_command *cmd);
 
 void	handle_sigint_main(int sig);
 void	handle_sigint_fork(int sig);
+void	handle_sigquit_fork(int sig);
 
 #endif

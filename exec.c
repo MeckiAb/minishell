@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:07:06 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 11:40:39 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:16:10 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,13 +131,14 @@ static void	wait_process(t_mini *mini)
 		if (cmd->pid != -1)
 		{
 			signal(SIGINT, handle_sigint_fork);
+			signal(SIGQUIT, handle_sigquit_fork);
 			waitpid(cmd->pid, &(cmd->exit_status), 0);
 			mini->status = WEXITSTATUS(cmd->exit_status);
 		}
 		else
 			mini->status = WEXITSTATUS(cmd->exit_status);
 		if (global_signal)
-			mini->status = 130;
+			mini->status = 129 + global_signal;
 		cmd = cmd->next;
 	}
 	global_signal = 0;

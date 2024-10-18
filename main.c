@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:45:50 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/16 05:30:03 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:30:47 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,20 @@ void	free_shell(t_mini *mini)
 	free(mini);
 }
 
+void	handle_sigquit_fork(int sig)
+{
+	(void)sig;
+	printf("Quit (core dumped)\n");
+	global_signal = 2;
+	kill(0, SIGINT);
+}
+
 void	handle_sigint_fork(int sig)
 {
 	(void)sig;
 	printf("\n");
-	global_signal = 1;
+	if (global_signal == 0)
+		global_signal = 1;
 }
 
 void	handle_sigint_main(int sig)
@@ -86,9 +95,9 @@ int	main(int argc, char **argv, char **envp)
 	init_environment(mini, envp);
 	if (argc != 1 || !mini)
 		return (1);
-	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, handle_sigint_main);
 		str = readline("MiniShell :\\>");
 		if (!str)
