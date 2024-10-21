@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 14:44:08 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:38:03 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,21 @@ static int	select_quote(int quote, char c)
 	return (0);
 }
 
+int	expand_word(t_mini *mini, char **str, char **tmp)
+{
+	int		j;
+	char	*value;
+	char	*aux;
+
+	value = insert_variable_value(mini, str);
+	j = ft_strlen(value);
+	aux = *tmp;
+	*tmp = ft_strjoin(aux, value);
+	free(aux);
+	free(value);
+	return (j);
+}
+
 static void	insert_word(t_mini *mini, char **str)
 {
 	int		j;
@@ -91,12 +106,9 @@ static void	insert_word(t_mini *mini, char **str)
 	{
 		if ((**str == '\'' && quote <= 0) || (**str == '\"' && quote >= 0))
 			quote = select_quote(quote, *(*str)++);
-		else if (**str == '$' && quote >= 0
-			&& *(*str + 1) == '?' && ++*str)
-			insert_variable_value(mini, str);
-		else if (**str == '$' && quote >= 0
-			&& (ft_isalnum(*(*str + 1)) || *(*str + 1) == '_') && ++*str)
-			insert_variable_value(mini, str);
+		else if (**str == '$' && quote >= 0 && (*(*str + 1) == '?' ||
+				(ft_isalnum(*(*str + 1)) || *(*str + 1) == '_')) && ++*str)
+			j += expand_word(mini, str, &tmp);
 		else
 			tmp[j++] = *(*str)++;
 	}

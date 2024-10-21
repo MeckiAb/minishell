@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:28:37 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 14:31:09 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/21 10:07:13 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,7 @@ t_tkn	*process_token(t_mini *mini, t_command *cmd, t_tkn *p)
 	else if (p->tkn_type == 2)
 		cmd->arg_array = add_str_to_array(p->tkn, cmd->arg_array);
 	p = p->next;
-	if (g_signal)
-	{
-		mini->status = 130;
-		free_commands_and_tokens(mini);
-		g_signal = 0;
-		return (NULL);
-	}
+
 	return (p);
 }
 
@@ -108,10 +102,15 @@ void	parser(t_mini *mini)
 		cmd = new_command();
 		while (p && p->tkn_type != 0)
 			p = process_token(mini, cmd, p);
-		if (p && p->tkn_type == 0)
+		if (g_signal)
+		{
+			mini->status = 130;
+			free_commands_and_tokens(mini);
+			g_signal = 0;
+		}
+		else if (p && p->tkn_type == 0)
 		{
 			insert_command(mini, cmd);
-			cmd = new_command();
 			p = p->next;
 		}
 		else

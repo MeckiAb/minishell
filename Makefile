@@ -6,12 +6,12 @@
 #    By: labderra <labderra@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 12:03:18 by labderra          #+#    #+#              #
-#    Updated: 2024/10/18 14:48:49 by labderra         ###   ########.fr        #
+#    Updated: 2024/10/18 16:45:16 by labderra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-CC = clang -Wall -Werror -Wextra -g #-fsanitize=address
+CC = clang -Wall -Werror -Wextra -g -fsanitize=address
 LIBFT = libft/libft.a
 SRC = main.c \
 initialize.c \

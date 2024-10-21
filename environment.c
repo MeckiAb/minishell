@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 13:52:59 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:15:56 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ char	***copy_split_environment(char **envp)
 	return (p);
 }
 
-void	insert_variable_value(t_mini *mini, char **str)
+char	*insert_variable_value(t_mini *mini, char **str)
 {
 	char	*identifier;
 	char	*value;
@@ -149,5 +149,33 @@ void	insert_variable_value(t_mini *mini, char **str)
 		value = get_env_item(mini->envp, identifier);
 		free(identifier);
 	}
-	*str = join_before_line(value, *str);
+	return (value);
 }
+/* 
+void	insert_variable_value(t_mini *mini, char **str)
+{
+	char	*identifier;
+	char	*value;
+	int		j;
+	char	*aux;
+
+	if (**str == '?' && ++*str)
+		value = ft_itoa(mini->status);
+	else if (**str == '0' && ++*str)
+		value = ft_strdup(mini->argv[0]);
+	else if (**str > '0' && **str <= '9' && ++*str)
+		value = ft_strdup("");
+	else
+	{
+		j = 0;
+		identifier = ft_calloc(sizeof(char), ft_strlen(*str) + 1);
+		while (**str == '_' || ft_isalnum(**str))
+			identifier[j++] = *(*str)++;
+		value = get_env_item(mini->envp, identifier);
+		free(identifier);
+	}
+	aux = ft_strjoin(value, *str);
+	free(value);
+	*str = aux;
+}
+ */
