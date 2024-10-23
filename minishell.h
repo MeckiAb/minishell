@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/23 14:29:43 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/24 00:36:07 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_tkn
 
 typedef struct s_command
 {
-	char 				**arg_array;
+	char				**arg_array;
 	int					infile;
 	int					outfile;
 	int					exit_status;
@@ -57,50 +57,28 @@ typedef struct s_mini
 	t_command	*cmd_list;
 }				t_mini;
 
-
-
-char	**get_full_path(char **envp);
-void	free_shell(t_mini *mini);
+/* MAIN PROGRAM */
 t_mini	*init_shell(char **argv, char **envp);
-
-
-
-void	free_split(char **str);
-void	free_list(t_tkn **tkn_list);
-void	free_commands_and_tokens(t_mini *mini);
-void	free_dictionary(char ***dict);
-char	*join_before_line(char *prefix, char *line);
-unsigned long long	ft_atoll(const char *str);
-char	***add_elem_to_dict(char **str, char ***list);
-char	*triple_strjoin(char const *s1, char const *s2, char const *s3);
-void	*ft_realloc(void *p, int old_size, int new_size);
-char	*get_env_item(char **envp, char *item);
-int		heredoc_launcher(t_mini *mini, char *lmt, int xpand);
-
-
+void	lexer(t_mini *mini, char *str);
 void	insert_word(t_mini *mini, char **str);
 void	insert_token(t_mini *mini, char *str, int tkn_type);
-
-void	lexer(t_mini *mini, char *str);
+char	*check_syntax(t_mini *mini);
 void	parser(t_mini *mini);
 void	exec_line(t_mini *mini);
 
+/* ENVIRONMENT MANAGEMENT */
+char	*get_env_item(char **envp, char *item);
 char	*insert_variable_value(t_mini *mini, char **str);
-char	*check_syntax(t_mini *mini);
-char	**add_str_to_array(char *str, char **list);
-char	**copy_environment(char **envp);
-char	***copy_split_environment(char **envp);
-void	apply_redir(t_command *cmd);
-void	revert_redir(t_mini *mini, t_command *cmd);
-
-char	***triple_copy_add(char ***triple);
-void	print_errors(char *s1, char *s2, char *s3);
-int 	len_before_equal(char *s);
 int		search_env(t_mini *mini, char *str);
 void	dict_to_envp(t_mini *mini);
+char	**copy_environment(char **envp);
+char	***copy_split_environment(char **envp);
 
+/* SYSTEM FUNCTIONS */
+void	run_execve_command(t_mini *mini, t_command *cmd, int fd[2]);
 
-int 	run_echo(t_mini *mini, t_command *cmd);
+/* BUILTIN FUNCTIONS */
+int		run_echo(t_mini *mini, t_command *cmd);
 int		run_pwd(t_mini *mini, t_command *cmd);
 int		run_export(t_mini *mini, t_command *cmd);
 int		run_env(t_mini *mini, t_command *cmd);
@@ -108,8 +86,29 @@ int		run_exit(t_mini *mini, t_command *cmd);
 int		run_unset(t_mini *mini, t_command *cmd);
 int		run_cd(t_mini *mini, t_command *cmd);
 
+/* REDIRECTIONS & HERE-DOCUMENTS */
+void	apply_redir(t_command *cmd);
+void	revert_redir(t_mini *mini, t_command *cmd);
+int		heredoc_launcher(t_mini *mini, char *lmt, int xpand);
+
+/* SIGNAL HANDLERS */
 void	handle_sigint_main(int sig);
 void	handle_sigint_fork(int sig);
 void	handle_sigquit_fork(int sig);
+
+/* TOOLS */
+void	*ft_realloc(void *p, int old_size, int new_size);
+char	***add_elem_to_dict(char **str, char ***list);
+char	**add_str_to_array(char *str, char **list);
+char	*triple_strjoin(char const *s1, char const *s2, char const *s3);
+void	print_errors(char *s1, char *s2, char *s3);
+int		len_before_equal(char *s);
+
+/* CLEANING */
+void	free_shell(t_mini *mini);
+void	free_split(char **str);
+void	free_list(t_tkn **tkn_list);
+void	free_commands_and_tokens(t_mini *mini);
+void	free_dictionary(char ***dict);
 
 #endif

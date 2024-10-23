@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: labderra <labderra@student.42.fr>          +#+  +:+       +#+         #
+#    By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 12:03:18 by labderra          #+#    #+#              #
-#    Updated: 2024/10/23 14:30:03 by labderra         ###   ########.fr        #
+#    Updated: 2024/10/24 00:42:59 by labderra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,10 +23,14 @@ parser.c \
 heredoc.c \
 redirections.c \
 exec.c \
+extern_cmd.c \
 tools1.c \
 tools2.c \
 environment.c \
-builtin.c \
+echo.c \
+pwd.c \
+exit.c \
+env.c \
 unset.c \
 cd.c \
 export.c
@@ -46,16 +50,13 @@ $(NAME) : $(LIBFT) $(OBJ)
 	$(CC) $(OBJ) $(LIBFT) -lreadline -ltermcap -o $@
 
 clean :
-	rm $(OBJ)
+	rm -f $(OBJ)
 	make -C libft clean
 
 fclean : clean
-	rm $(NAME)
+	rm -f $(NAME)
 	make -C libft fclean
 
 re : fclean all
 
-test : all clean
-	./minishell
-
-.PHONY : all clean fclean re test
+.PHONY : all clean fclean re 

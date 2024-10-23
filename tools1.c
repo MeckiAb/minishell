@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:21:28 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 14:49:40 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/24 00:31:12 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,6 @@ char	*triple_strjoin(char const *s1, char const *s2, char const *s3)
 		p[i++] = *s3++;
 	p[i] = '\0';
 	return (p);
-}
-
-char	*join_before_line(char *prefix, char *line)
-{
-	char	*temp;
-	int		i;
-	int		j;
-
-	temp = malloc(sizeof(char) * (ft_strlen(prefix) + ft_strlen(line) + 1));
-	if (!temp)
-		return (NULL);
-	i = -1;
-	while (prefix[++i])
-		temp[i] = prefix[i];
-	j = 0;
-	while (line[j])
-		temp[i++] = line[j++];
-	temp[i] = '\0';
-	free(prefix);
-	return (temp);
 }
 
 void	*ft_realloc(void *p, int old_size, int new_size)

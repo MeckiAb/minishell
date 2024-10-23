@@ -3,31 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 18:15:56 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/23 21:36:05 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**get_full_path(char **envp)
-{
-	while (envp && *envp && ft_strncmp(*envp, "PATH=", 5))
-		envp++;
-	if (!envp || !*envp)
-		return (ft_split("", ' '));
-	return(ft_split(*envp + 5, ':'));
-/* 		return (ft_split("/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:\
-			/sbin:/bin:.", ':'));
-	return (add_str_to_array(".", ft_split(*envp + 5, ':')));
- */}
-
 char	*get_env_item(char **envp, char *item)
 {
 	char	*search;
-	
+
 	search = ft_strjoin(item, "=");
 	if (!search)
 		return (item);
@@ -73,7 +61,7 @@ void	dict_to_envp(t_mini *mini)
 		if (*mini->envp_dictionary[i][1])
 		{
 			new[j] = triple_strjoin(mini->envp_dictionary[i][0],
-				"=", mini->envp_dictionary[i][1]);
+					"=", mini->envp_dictionary[i][1]);
 			j++;
 		}
 		i++;
@@ -82,45 +70,44 @@ void	dict_to_envp(t_mini *mini)
 	free_split(mini->envp);
 	mini->envp = new;
 }
-
-char ***triple_copy_add(char ***triple)
+/* 
+char	***triple_copy_add(char ***triple)
 {
-	char ***result;
-	int 	i;
+	char	***result;
+	int		i;
 
 	i = 0;
-	while(triple[i])
+	while (triple[i])
 		i++;
 	result = ft_calloc(sizeof(char **), i + 1);
 	i = 0;
-	while(triple[i])
+	while (triple[i])
 	{
 		result[i] = copy_environment(triple[i]);
 		i++;
 	}
 	free_dictionary(triple);
-	return(result);
-}
-
+	return (result);
+} */
 
 char	***copy_split_environment(char **envp)
 {
 	char	***p;
 	int		i;
-	
+
 	i = 0;
-	while(envp && envp[i])
+	while (envp && envp[i])
 		i++;
 	p = ft_calloc(sizeof(char **), i + 1);
 	i = 0;
 	while (envp && *envp)
 	{
-		if(ft_strncmp(*envp, "_=", 2))
+		if (ft_strncmp(*envp, "_=", 2))
 		{
 			p[i] = ft_calloc(sizeof(char *), 3);
 			p[i][0] = ft_substr(*envp, 0, len_before_equal(*envp));
 			p[i][1] = ft_substr(*envp,
-				len_before_equal(*envp) + 1, ft_strlen(*envp));
+					len_before_equal(*envp) + 1, ft_strlen(*envp));
 			i++;
 		}
 		envp++;
@@ -151,31 +138,3 @@ char	*insert_variable_value(t_mini *mini, char **str)
 	}
 	return (value);
 }
-/* 
-void	insert_variable_value(t_mini *mini, char **str)
-{
-	char	*identifier;
-	char	*value;
-	int		j;
-	char	*aux;
-
-	if (**str == '?' && ++*str)
-		value = ft_itoa(mini->status);
-	else if (**str == '0' && ++*str)
-		value = ft_strdup(mini->argv[0]);
-	else if (**str > '0' && **str <= '9' && ++*str)
-		value = ft_strdup("");
-	else
-	{
-		j = 0;
-		identifier = ft_calloc(sizeof(char), ft_strlen(*str) + 1);
-		while (**str == '_' || ft_isalnum(**str))
-			identifier[j++] = *(*str)++;
-		value = get_env_item(mini->envp, identifier);
-		free(identifier);
-	}
-	aux = ft_strjoin(value, *str);
-	free(value);
-	*str = aux;
-}
- */
