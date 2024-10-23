@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:43:23 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 13:50:19 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:46:30 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	free_commands_and_tokens(t_mini *mini)
 	{
 		cmd = mini->cmd_list;
 		mini->cmd_list = mini->cmd_list->next;
-		free(cmd->path);
 		free_split(cmd->arg_array);
 		free(cmd);
 	}

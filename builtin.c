@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 11:42:34 by jormoral          #+#    #+#             */
-/*   Updated: 2024/10/17 14:19:09 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:46:24 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	print_cmd(t_mini *mini)
 	printf("CMD : %p\n", cmd);
 	while (cmd->arg_array[i])
 		printf("ARG_ARRAY[i] : %s\n",cmd->arg_array[i++]);
-	printf("PATH : %s\n", cmd->path);
 	printf("INFILE : %d - OUTFILE : %d\n", cmd->infile, cmd->outfile);
 	printf("PID : %d - EXIT STATUS : %d\n", cmd->pid, cmd->exit_status);
 	printf("NEXT : %p\n", cmd->next);

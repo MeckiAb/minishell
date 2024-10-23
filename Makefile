@@ -6,7 +6,7 @@
 #    By: labderra <labderra@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 12:03:18 by labderra          #+#    #+#              #
-#    Updated: 2024/10/18 16:45:16 by labderra         ###   ########.fr        #
+#    Updated: 2024/10/23 14:30:03 by labderra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ initialize.c \
 signals.c \
 free.c \
 lexer.c \
+words.c \
 parser.c \
 heredoc.c \
 redirections.c \

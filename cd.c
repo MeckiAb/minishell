@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jormoral <jormoral@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 11:49:48 by jormoral          #+#    #+#             */
-/*   Updated: 2024/10/16 19:25:20 by jormoral         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:03:31 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int run_cd(t_mini *mini, t_command *cmd)
 	char *new_old_pwd;
 	char *new_pwd;
 	char *tilde_path;
-	
 	
 	new_old_pwd = getcwd(NULL, 0);
 	if((!cmd->arg_array[1] || cmd->arg_array[1][0] == '~'))
@@ -60,7 +59,9 @@ int run_cd(t_mini *mini, t_command *cmd)
 	{
 		if(chdir(cmd->arg_array[1]) == -1)
 		{
-			perror("NOT FOUND manolo");
+			print_errors("MiniShell: cd: ", cmd->arg_array[1], ": ");
+			print_errors(strerror(errno), "\n", "");
+			free(new_old_pwd);
 			return (257);
 		}
 	}

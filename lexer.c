@@ -6,13 +6,13 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:05:04 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 18:38:03 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:29:47 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	insert_token(t_mini *mini, char *str, int tkn_type)
+void	insert_token(t_mini *mini, char *str, int tkn_type)
 {
 	t_tkn	*t;
 	t_tkn	*p;
@@ -58,63 +58,6 @@ static void	insert_control(t_mini *mini, char **str)
 		insert_token(mini, ">", 1);
 	else if (**str == '|' && ++*str)
 		insert_token(mini, "|", 0);
-}
-
-static int	select_quote(int quote, char c)
-{
-	if (quote == 0 && c == '\"')
-		return (1);
-	else if (quote == 0 && c == '\'')
-		return (-1);
-	else if (quote == 1 && c == '\"')
-		return (0);
-	else if (quote == 1 && c == '\'')
-		return (1);
-	else if (quote == -1 && c == '\"')
-		return (-1);
-	else if (quote == -1 && c == '\'')
-		return (0);
-	return (0);
-}
-
-int	expand_word(t_mini *mini, char **str, char **tmp)
-{
-	int		j;
-	char	*value;
-	char	*aux;
-
-	value = insert_variable_value(mini, str);
-	j = ft_strlen(value);
-	aux = *tmp;
-	*tmp = ft_strjoin(aux, value);
-	free(aux);
-	free(value);
-	return (j);
-}
-
-static void	insert_word(t_mini *mini, char **str)
-{
-	int		j;
-	char	*tmp;
-	int		quote;
-
-	j = 0;
-	quote = 0;
-	tmp = ft_calloc(sizeof(char), 4096);
-	while (**str && (quote || !(**str == ' ' || **str == '\t' || **str == '\n'
-				|| **str == '<' || **str == '>' || **str == '|')))
-	{
-		if ((**str == '\'' && quote <= 0) || (**str == '\"' && quote >= 0))
-			quote = select_quote(quote, *(*str)++);
-		else if (**str == '$' && quote >= 0 && (*(*str + 1) == '?' ||
-				(ft_isalnum(*(*str + 1)) || *(*str + 1) == '_')) && ++*str)
-			j += expand_word(mini, str, &tmp);
-		else
-			tmp[j++] = *(*str)++;
-	}
-	if (!quote)
-		insert_token(mini, tmp, 2);
-	free(tmp);
 }
 
 void	lexer(t_mini *mini, char *str)

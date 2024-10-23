@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:28:37 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/21 10:07:13 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:23:54 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ static t_command	*new_command(void)
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-	cmd->path = NULL;
 	cmd->infile = -2;
 	cmd->outfile = -2;
 	cmd->pid = -1;
@@ -87,7 +86,6 @@ t_tkn	*process_token(t_mini *mini, t_command *cmd, t_tkn *p)
 	else if (p->tkn_type == 2)
 		cmd->arg_array = add_str_to_array(p->tkn, cmd->arg_array);
 	p = p->next;
-
 	return (p);
 }
 
@@ -106,14 +104,13 @@ void	parser(t_mini *mini)
 		{
 			mini->status = 130;
 			free_commands_and_tokens(mini);
+			free_split(cmd->arg_array);
+			free(cmd);
 			g_signal = 0;
+			break ;
 		}
-		else if (p && p->tkn_type == 0)
-		{
-			insert_command(mini, cmd);
+		insert_command(mini, cmd);
+		if (p && p->tkn_type == 0)
 			p = p->next;
-		}
-		else
-			insert_command(mini, cmd);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 18:04:01 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:29:43 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct s_tkn
 
 typedef struct s_command
 {
-	char				*path;
 	char 				**arg_array;
 	int					infile;
 	int					outfile;
@@ -79,7 +78,8 @@ char	*get_env_item(char **envp, char *item);
 int		heredoc_launcher(t_mini *mini, char *lmt, int xpand);
 
 
-
+void	insert_word(t_mini *mini, char **str);
+void	insert_token(t_mini *mini, char *str, int tkn_type);
 
 void	lexer(t_mini *mini, char *str);
 void	parser(t_mini *mini);
