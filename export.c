@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 12:42:56 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/24 00:05:45 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/25 07:54:06 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,9 @@ int	run_export(t_mini *mini, t_command *cmd)
 		flag = ft_strchr(cmd->arg_array[i], '=') != NULL;
 		if (check_export(cmd->arg_array[i]))
 		{
-			printf("minishell: export: %s: %s\n", cmd->arg_array[i],
-				strerror(errno));
-			return (1);
+			printf("minishell: export: `%s\': %s\n", cmd->arg_array[i],
+				"not a valid identifier");
+			return (257);
 		}
 		dict_len = 0;
 		while (mini->envp_dictionary && mini->envp_dictionary[dict_len])

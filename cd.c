@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 11:49:48 by jormoral          #+#    #+#             */
-/*   Updated: 2024/10/23 23:25:54 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/25 07:51:03 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	cd_home(t_mini *mini, t_command *cmd)
 	i = search_env(mini, "HOME=");
 	if (!mini->envp[i])
 	{
-		printf("MiniShell: cd: %s\n", strerror(errno));
+		printf("MiniShell: cd: %s\n", "HOME not set");
 		return (257);
 	}
 	if (cmd->arg_array[1] && cmd->arg_array[1][1])

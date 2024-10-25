@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   words.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:27:57 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/23 14:28:57 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/25 08:05:19 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ static int	expand_word(t_mini *mini, char **str, char **tmp)
 
 	value = insert_variable_value(mini, str);
 	j = ft_strlen(value);
-	aux = *tmp;
-	*tmp = ft_strjoin(aux, value);
-	free(aux);
+	aux = ft_strjoin(*tmp, value);
+	free(*tmp);
 	free(value);
+	*tmp = ft_realloc(aux, ft_strlen(aux), 4096);
 	return (j);
 }
 
@@ -58,8 +58,9 @@ void	insert_word(t_mini *mini, char **str)
 	{
 		if ((**str == '\'' && quote <= 0) || (**str == '\"' && quote >= 0))
 			quote = select_quote(quote, *(*str)++);
-		else if (**str == '$' && quote >= 0 && (*(*str + 1) == '?'
-				|| (ft_isalnum(*(*str + 1)) || *(*str + 1) == '_')) && ++*str)
+		else if (**str == '$' && quote >= 0 && ((*(*str + 1) == '?'
+					|| (ft_isalnum(*(*str + 1))
+						|| *(*str + 1) == '_'))) && ++*str)
 			j += expand_word(mini, str, &tmp);
 		else
 			tmp[j++] = *(*str)++;

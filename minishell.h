@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:04:43 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/24 00:36:07 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/25 07:58:02 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <signal.h>
-# include <term.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"

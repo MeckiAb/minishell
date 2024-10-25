@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 23:49:23 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/21 09:33:53 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/25 07:33:14 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	expand_word(t_mini *mini, char **str, char **tmp)
+{
+	int		j;
+	char	*value;
+	char	*aux;
+
+	value = insert_variable_value(mini, str);
+	j = ft_strlen(value);
+	aux = *tmp;
+	*tmp = ft_strjoin(aux, value);
+	free(aux);
+	free(value);
+	return (j);
+}
 
 static char	*expand_heredoc_dollar(t_mini *mini, char **str)
 {
@@ -28,7 +43,7 @@ static char	*expand_heredoc_dollar(t_mini *mini, char **str)
 		if (**str == '$' && (ft_isalnum(*(*str + 1)) || *(*str + 1) == '_'))
 		{
 			++*str;
-			insert_variable_value(mini, str);
+			i += expand_word(mini, str, &tmp);
 		}
 		else
 			tmp[i++] = *(*str)++;

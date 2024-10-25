@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: labderra <labderra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:42:10 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/18 14:42:22 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/25 07:58:57 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ void	apply_redir(t_command *cmd)
 
 void	revert_redir(t_mini *mini, t_command *cmd)
 {
-	if (cmd->infile < 0)
-		dup2(mini->mini_in, STDIN_FILENO);
-	if (cmd->outfile < 0)
-		dup2(mini->mini_out, STDOUT_FILENO);
+	(void)cmd;
+	dup2(mini->mini_in, STDIN_FILENO);
+	dup2(mini->mini_out, STDOUT_FILENO);
 }

@@ -6,7 +6,7 @@
 /*   By: labderra <labderra@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:11:44 by labderra          #+#    #+#             */
-/*   Updated: 2024/10/23 21:36:05 by labderra         ###   ########.fr       */
+/*   Updated: 2024/10/25 07:52:06 by labderra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,25 +70,6 @@ void	dict_to_envp(t_mini *mini)
 	free_split(mini->envp);
 	mini->envp = new;
 }
-/* 
-char	***triple_copy_add(char ***triple)
-{
-	char	***result;
-	int		i;
-
-	i = 0;
-	while (triple[i])
-		i++;
-	result = ft_calloc(sizeof(char **), i + 1);
-	i = 0;
-	while (triple[i])
-	{
-		result[i] = copy_environment(triple[i]);
-		i++;
-	}
-	free_dictionary(triple);
-	return (result);
-} */
 
 char	***copy_split_environment(char **envp)
 {
